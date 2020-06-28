@@ -1,0 +1,28 @@
+{
+    "compileOnSave": false,
+    "compilerOptions": {
+        "allowSyntheticDefaultImports": true,
+        "experimentalDecorators": true,
+        "lib": [
+            "dom",
+            "esnext",
+        ],
+        "target": "esnext",
+        "module": "esnext",
+        "moduleResolution": "node",
+        "jsx": "react",
+        "allowJs": true,
+        "noImplicitAny": false,
+        "sourceMap": true,
+        "skipLibCheck": true,
+        "baseUrl": ".",
+        "paths": {
+          "@/*": [
+            "*",
+            "src/*"
+          ]
+        },
+        "types" : [],
+       
+    }
+}

@@ -118,14 +118,14 @@ package.json文件 "scripts"：{}中添加：
 
 **遇到的问题：**    
 
-**# 问题：**起初没有install webpack-cli，运行npm run server时提示： `Please install 'webpack-cli' in addition to webpack itself to use the CLI.`    
+**Q：** 起初没有install webpack-cli，运行npm run server时提示： `Please install 'webpack-cli' in addition to webpack itself to use the CLI.`    
 安装完后又提示：`Cannot find module 'webpack-cli/bin/config-yargs'`    
 
-解决方法: https://www.cnblogs.com/zixuan00/p/10974970.html    
+**A：**  https://www.cnblogs.com/zixuan00/p/10974970.html    
 将 webpack，webpack-cli，webpack-dev-server都卸载掉然后重新一起安装。    
 
-**# 问题：**生成sourceMap失败，bug定位到bundle.js，无法准确定位到源文件。    
+**Q：** 生成sourceMap失败，bug定位到bundle.js，无法准确定位到源文件。    
 
-解决办法：package.json文件 "scripts"：{}中改成添加：    
+**A：** package.json文件 "scripts"：{}中改成添加：    
 `"server": "set GENERATE_SOURCEMAP=true && webpack-dev-server --mode=development --http" `    
 webpack.config.js中的`devtool: 'inline-source-map'` 也可以去掉了。

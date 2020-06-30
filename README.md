@@ -235,7 +235,8 @@ class App extends React.Component<any, CalendarState> {
 	render(){
 		return (
 			<div>
-			<Alert open={this.state.alertOpen} title={this.state.alertTitle} text={this.state.alertText} cancelHandler={this.alertCloseHandler} commitHandler={this.alertCloseHandler}/>
+			<Alert open={this.state.alertOpen} title={this.state.alertTitle} text={this.state.alertText} 
+			cancelHandler={this.alertCloseHandler} commitHandler={this.alertCloseHandler}/>
 			<Button size='small' startIcon={<DeleteForeverIcon />} onClick={this.btnClickHandler}>Show Alert</Button>
 			</div>
 		)

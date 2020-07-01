@@ -8,13 +8,25 @@ module.exports = {
     host: '0.0.0.0',
     port: '8888',
   },
-  devtool: 'inline-source-map',
   module: {
     rules: [
       {
         test: /\.tsx?$/,
         use: 'ts-loader',
         exclude: /node_modules/,
+      },
+      {
+        test: /\.(png|woff|woff2|eot|ttf|svg|gif|jpg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+        exclude: /node_modules/,
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+              limit: 5000,
+              name: 'img/[name].[ext]'
+            }
+          }
+        ]
       },
     ],
   },

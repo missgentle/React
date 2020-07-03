@@ -3,6 +3,16 @@ A Mini Diary By React
 
 ## React项目搭建过程记录
 
+> (虽然很有可能没人会看😓但还是要码的字：)
+> 声明在先：如果是和我一样之前React完全0基础的同学，那官方文档是一定要撸的，以下是我的学习建议(当然有更适合自己的思路更好)：    
+> 建议先跟着官网做个小例子体会一下react的思想 https://reactjs.org/tutorial/tutorial.html     
+> 然后去看理论，特别是 Main Concepts 部分 https://reactjs.org/docs/hello-world.html     
+> 但我的项目并没有用官网推荐的脚手架启，所以还需要没基础的同学去了解一下webpack：    
+> 喜欢边做边学的墙裂推荐看这里 https://webpack.js.org/guides/getting-started/     
+> 学习能力不是很强的可以先简单看下很基础的概念 https://webpack.js.org/concepts/    
+> 然后因为还使用了UI框架Material-UI，所以你懂的 https://material-ui.com/zh/getting-started/installation/    
+> 我现在自己看看都感叹，想不到做个项目要学这么多，但不要怕，我有现在的水平花了整整两年，虽然很菜，但一点一点的积累总会有质的飞跃。
+
 1 在想要创建项目的路径下cmd依次运行以下各条命令：    
 ```
 mkdir React_Mini_Diary

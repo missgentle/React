@@ -261,5 +261,261 @@ webpack.config.js中的`devtool: 'inline-source-map'` 也可以去掉了。
 而我们使用的ts编写代码，由于严格的规范不加<any, CalendarState>会导致编译无法通过，在访问this.props.xxx或this.state.xxx时，
 报错没有xxx这个属性。为了省事，也完全可以写<any, any>，但既然用了ts那就规范起来，这里定义一个CalendarState接口，props还没用到，暂且先用any填充。    
 
-11 
+11 到此，主要的测试已经差不多了，接下来真正开始这个项目UI构筑，index.tsx内容替换如下：    
+
+```
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
+import {
+	Button,Grid,Typography,Breadcrumbs,Link,
+	GridList,GridListTile,ListSubheader,GridListTileBar,
+	IconButton,Paper
+} from '@material-ui/core';
+import HomeIcon from '@material-ui/icons/Home';
+import WhatshotIcon from '@material-ui/icons/Whatshot';
+import GrainIcon from '@material-ui/icons/Grain';
+import InfoIcon from '@material-ui/icons/Info';
+import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
+import Img from '@/imgs/img.jpg';
+
+const curTime = new Date();
+const curYear = curTime.getFullYear(),
+    curMonth = curTime.getMonth() + 1,
+    curDate = curTime.getDate();
+
+const initState = {
+    alertOpen: false,
+    alertTitle: "提示",
+    alertText: "",
+    curYear: curYear,
+    curMonth: curMonth,
+    curDate: curDate,
+};
+
+const weekEn = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+const weekCn = ["星期日","星期一","星期二","星期三","星期四","星期五","星期六"];
+const month = ["Jan","Feb","Mar","Apr","May","June","July","Aug","Sept","Oct","Nov","Dec"];
+
+interface CalendarState extends React.HTMLAttributes<HTMLElement>{
+    alertOpen: boolean,
+    alertTitle: string,
+    alertText: string,
+    curYear: number,
+    curMonth: number,
+    curDate: number,
+}
+
+let diaryData = [];
+let firstDay:number;
+
+
+class App extends React.Component<any, CalendarState> {
+
+	constructor(props){
+		super(props);
+		this.state = initState;
+	}
+
+	btnClickHandler = () => {
+		this.setState({
+			alertOpen: true,
+			alertText: "确定要删除吗？"
+		})
+	}
+
+	alertCloseHandler = () => {
+		this.setState({
+			alertOpen: false
+		});
+	}
+
+	handleClick = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+		event.preventDefault();console.info('You clicked a breadcrumb.');
+	}
+
+	  renderDiaryData = (curYear: number, curMonth: number) => {
+	    let leapFlag: boolean = (curYear%400 === 0) || ((curYear%4 === 0) && (curYear%100 !== 0)) ? true : false ;
+	    let daysNum: number;
+	    switch(curMonth){
+	      case 2:
+		daysNum = leapFlag ? 29 : 28;
+		break;
+	      case 4: 
+	      case 6:
+	      case 9:
+	      case 11:
+		daysNum = 30;
+		break;
+	      default:
+		daysNum = 31;
+	    }
+	    firstDay = new Date(curYear, curMonth - 1, 1).getDay();
+	    for(let j = 1; j < daysNum+1; j++ ){
+	      diaryData.push({
+		img: Img,
+		year: curYear,
+		month: curMonth,
+		day: j,
+		week: (j+firstDay-1)%7
+	      });
+	    }
+	  }
+
+	render(){
+    		this.renderDiaryData(this.state.curYear, this.state.curMonth);
+		return (
+			<div>
+			<Grid container spacing={2}>
+				<Grid container item xs={12} justify="center" alignItems="center" style={{ backgroundColor: '#4d9660' }}>
+				<Grid container item xs={10} justify="center" alignItems="center">
+		          <FavoriteBorderIcon fontSize="small"/>
+		          <Typography component="div" color="textPrimary" >
+		          	Mini Diary
+			      </Typography>
+			      <FavoriteBorderIcon fontSize="small"/>
+		        </Grid>
+		        </Grid>
+		        <Grid container item xs={12} justify="center" alignItems="center"  style={{ backgroundColor: '#4d9660' }}>
+		        <Grid container item xs={10} justify="center" alignItems="center">
+			      <Typography component="div" color="textSecondary" >
+		          	An achievable goal
+			      </Typography>
+		        </Grid>
+		        </Grid>
+		        <Grid container item xs={12} justify="center" alignItems="center"  style={{ backgroundColor: '#4d9660'}}>
+				<Grid container item xs={10} justify="center" alignItems="center">
+				  <Breadcrumbs aria-label="breadcrumb">
+			      <Link color="inherit" href="/" onClick={this.handleClick} >
+			        <HomeIcon />Material-UI
+			      </Link>
+			      <Link color="inherit" href="/getting-started/installation/" onClick={this.handleClick} >
+			        <WhatshotIcon  />Core
+			      </Link>
+			      <Typography color="textPrimary" >
+			        <GrainIcon />Breadcrumb
+			      </Typography>
+			    </Breadcrumbs>
+        		</Grid>
+        		</Grid>
+        		<Grid container item xs={12} justify="center" alignItems="center" >
+        		<Grid container item xs={10} justify="center" alignItems="center">
+		          <Typography color="textPrimary" >
+		          { month[this.state.curMonth] + " " + this.state.curYear}
+              </Typography>
+		        </Grid>
+		        </Grid>
+		        <Grid container item xs={12} justify="center" alignItems="center">
+		        <Grid item xs={10}>
+		          <GridList cellHeight={120} cols={7}>
+		          	{weekEn.map((item)=>(
+		          		<GridListTile cols={1} style={{ height: 'auto' }}>
+				          <ListSubheader component="div" style={{textAlign:"center"}}>
+				          	{item}
+				          </ListSubheader>
+				        </GridListTile>
+		          	))}
+                <GridListTile cols={firstDay-1} style={{ height: 'auto' }}></GridListTile>
+                {diaryData.map((item) => (
+			          <GridListTile key={item.year+"/"+item.month+"/"+item.day}>
+			            <Paper />
+                  <img src={item.img} alt={item.img} />
+			            <GridListTileBar
+			              title={item.month+"/"+item.day}
+			              subtitle={<span>by: {weekCn[item.week]}</span>}
+			              actionIcon={
+			                <IconButton aria-label={`info about ${item.year}`}>
+			                  <InfoIcon />
+			                </IconButton>
+			              }
+			            />
+			          </GridListTile>
+			        ))}
+			      </GridList>
+		        </Grid>
+		        </Grid>
+      		</Grid>
+      		<Grid container item xs={12} justify="center" alignItems="center" >
+        	<Grid container item xs={5} justify="flex-start" alignItems="center">
+	      		<Link color="inherit" href="/" onClick={this.handleClick} >
+				    <ArrowBackIosIcon />{month[this.state.curMonth - 1]}
+				</Link>
+			</Grid>
+			<Grid container item xs={5} justify="flex-end" alignItems="center">
+	      		<Link color="inherit" href="/" onClick={this.handleClick} >
+				    {month[this.state.curMonth + 1]}<ArrowForwardIosIcon />
+				</Link>
+			</Grid>
+		    </Grid>
+		</div>
+		)
+	}
+}
+
+ReactDOM.render(
+  <App />,
+  document.getElementById('root')
+);
+```
+这里的日历生成逻辑参考了这篇文章：https://www.php.cn/js-tutorial-408941.html    
+UI还是抄官网的改一改😓。。。。。。
+
+**遇到的问题：**    
+
+**Q：** 怎么确定是平年还是闰年？   
+**A：** 要不是找了篇参考代码，我还真不知道怎么确定，我以为就是单纯的除以4，结果又涨知识了。
+
+**Q：** new Date().getMonth()为什么得到的数字是上个月的月份？   
+**A：** 这里不得不说好坑，我纳闷了半天，还以为是哪里计算给我月份值给改了，结果最后查到getMonth()的返回值就是0-11，我心中的神兽又在奔跑了。    
+
+12 这里为了引入了一张图片，可真的是做了不少工作，首先需要添加两个新的包：    
+
+`npm install --save-dev url-loader file-loader`    
+其中file-loader应该是url-loader的依赖包，因为install过程中我先只装了url-loader，启动时提示我要装file-loader。    
+
+13 webpack.config.js中添加一点配置：    
+
+```
+	{
+        test: /\.(png|svg|gif|jpg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+        exclude: /node_modules/,
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+              limit: 5000,
+              name: 'img/[name].[ext]'
+            }
+          }
+        ]
+      }
+```    
+
+14 还是因为用的ts，还要加声明文件，src下创建types文件夹，创建global.d.ts，内容如下：
+
+```
+declare module "*.png" {
+  const value: any;
+  export = value;
+}
+
+declare module "*.jpg" {
+  const value: any;
+  export = value;
+}
+
+declare module "*.gif" {
+  const value: any;
+  export = value;
+}
+
+declare module "*.svg" {
+  const value: any;
+  export = value;
+}
+```    
+
+15 src下建个imgs文件夹，图片随便加一个，到此页面布局基本也到位了。引入图片过程中遇到了一些bug，就是对应上面这几个步骤了。    
+期间一个小技巧就是页面图片不显示时，访问 http://127.0.0.1:8888/webpack-dev-server 看打包出来的结构中是否有这个资源。    
 

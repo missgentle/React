@@ -286,9 +286,6 @@ const curYear = curTime.getFullYear(),
     curDate = curTime.getDate();
 
 const initState = {
-    alertOpen: false,
-    alertTitle: "提示",
-    alertText: "",
     curYear: curYear,
     curMonth: curMonth,
     curDate: curDate,
@@ -299,9 +296,6 @@ const weekCn = ["星期日","星期一","星期二","星期三","星期四","星
 const month = ["Jan","Feb","Mar","Apr","May","June","July","Aug","Sept","Oct","Nov","Dec"];
 
 interface CalendarState extends React.HTMLAttributes<HTMLElement>{
-    alertOpen: boolean,
-    alertTitle: string,
-    alertText: string,
     curYear: number,
     curMonth: number,
     curDate: number,
@@ -310,7 +304,6 @@ interface CalendarState extends React.HTMLAttributes<HTMLElement>{
 let diaryData = [];
 let firstDay:number;
 
-
 class App extends React.Component<any, CalendarState> {
 
 	constructor(props){
@@ -318,24 +311,11 @@ class App extends React.Component<any, CalendarState> {
 		this.state = initState;
 	}
 
-	btnClickHandler = () => {
-		this.setState({
-			alertOpen: true,
-			alertText: "确定要删除吗？"
-		})
-	}
-
-	alertCloseHandler = () => {
-		this.setState({
-			alertOpen: false
-		});
-	}
-
 	handleClick = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
 		event.preventDefault();console.info('You clicked a breadcrumb.');
 	}
 
-	  renderDiaryData = (curYear: number, curMonth: number) => {
+	renderDiaryData = (curYear: number, curMonth: number) => {
 	    let leapFlag: boolean = (curYear%400 === 0) || ((curYear%4 === 0) && (curYear%100 !== 0)) ? true : false ;
 	    let daysNum: number;
 	    switch(curMonth){
@@ -361,7 +341,7 @@ class App extends React.Component<any, CalendarState> {
 		week: (j+firstDay-1)%7
 	      });
 	    }
-	  }
+	}
 
 	render(){
     		this.renderDiaryData(this.state.curYear, this.state.curMonth);
@@ -516,6 +496,6 @@ declare module "*.svg" {
 }
 ```    
 
-15 src下建个imgs文件夹，图片随便加一个，到此页面布局基本也到位了。引入图片过程中遇到了一些bug，就是对应上面这几个步骤了。    
+15 src下建个imgs文件夹，图片随便加一个，到此页面布局基本也到位了，后面开始进入页面交互环节。引入图片过程中遇到了一些bug，就是对应上面这几个步骤了。    
 期间一个小技巧就是页面图片不显示时，访问 http://127.0.0.1:8888/webpack-dev-server 看打包出来的结构中是否有这个资源。    
 

@@ -529,14 +529,10 @@ import EditIcon from '@material-ui/icons/Edit';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
+import TodayIcon from '@material-ui/icons/Today';
 import Img from '@/imgs/img.jpg';
 
 const curTime = new Date();
-const initState = {
-  curYear: curTime.getFullYear(),
-  curMonth: curTime.getMonth() + 1,
-  curDate: curTime.getDate(),
-};
 
 const weekEn = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
 const weekCn = ["星期日","星期一","星期二","星期三","星期四","星期五","星期六"];
@@ -547,9 +543,30 @@ let firstDay:number;
 
 export default function App() {
 
-  const [curYear, setCurYear] = useState(initState.curYear);
-  const [curMonth, setCurMonth] = useState(initState.curMonth);
-  const [curDate, setCurDate] = useState(initState.curDate);
+  const [curYear, setCurYear] = useState(curTime.getFullYear());
+  const [curMonth, setCurMonth] = useState(curTime.getMonth() + 1);
+  const [curDate, setCurDate] = useState(curTime.getDate());
+
+  function monthSwitchBtnClickHandler(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    switch ((event.currentTarget as HTMLButtonElement).id) {
+      case "lastMonthBtn":
+        if(curMonth < 2){
+          setCurMonth(12);
+          setCurYear(curYear-1);
+        }else{
+          setCurMonth(curMonth-1);
+        }
+        break;
+      case "nextMonthBtn":
+        if(curMonth > 11){
+          setCurMonth(1);
+          setCurYear(curYear+1);
+        }else{
+          setCurMonth(curMonth+1);
+        }
+        break;
+    }
+  }
 
   function renderDiaryData (curYear: number, curMonth: number) {
     diaryData = [];
@@ -587,26 +604,39 @@ export default function App() {
       <Grid container spacing={2}>
         <Grid container item xs={12} justify="center" alignItems="center" style={{ backgroundColor: '#4d9660' }}>
           <Grid container item xs={10} justify="center" alignItems="center">
-            <FavoriteBorderIcon fontSize="small"/>
-              <h1>
-                Mini Diary
-              </h1>
-            <FavoriteBorderIcon fontSize="small"/>
+            <Typography component="div" color="textPrimary" style={{fontSize:32}}>
+                💗 - Mini Diary - 💗 
+            </Typography>
           </Grid>
         </Grid>
         <Grid container item xs={12} justify="center" alignItems="center"  style={{ backgroundColor: '#4d9660' }}>
           <Grid container item xs={10} justify="center" alignItems="center">
             <Typography component="div" color="textSecondary" >
-              An achievable goal
+              An achievable goal: Be happy today ❤ And next step: Be happy everyday
             </Typography>
           </Grid>
         </Grid>
         
         <Grid container item xs={12} justify="center" alignItems="center" >
           <Grid container item xs={10} justify="center" alignItems="center">
-            <h2>
-              { month[curMonth-1] + " " + curYear }
-            </h2>
+            <Grid container item xs={4} justify="flex-start" alignItems="center">
+              <Button id="lastMonthBtn" onClick={monthSwitchBtnClickHandler} color="primary" startIcon={<ArrowBackIosIcon />}>
+                {curMonth < 2 ? "Dec" : month[curMonth - 2]}
+              </Button>
+            </Grid>
+            <Grid container item xs={4} justify="center" alignItems="center">
+              <Typography component="div" color="textPrimary" style={{fontSize:24}}>
+                { month[curMonth-1] + " " + curYear }
+              </Typography>
+              <IconButton aria-label={`Jump to a day`} color="primary">
+                  <TodayIcon />
+              </IconButton>
+            </Grid>
+            <Grid container item xs={4} justify="flex-end" alignItems="center">
+              <Button id="nextMonthBtn" onClick={monthSwitchBtnClickHandler} color="primary" endIcon={<ArrowForwardIosIcon />}>
+                {curMonth > 11 ? "Jan" : month[curMonth]}
+              </Button>
+            </Grid>
           </Grid>
         </Grid>
 
@@ -620,16 +650,15 @@ export default function App() {
                     </ListSubheader>
                   </GridListTile>
                 ))}
-                <GridListTile cols={firstDay-1} style={{ height: 'auto' }}></GridListTile>
+                <GridListTile cols={ firstDay === 1 ? 7 : firstDay === 0 ? 6 : firstDay-1 } style={{ height: 'auto' }}></GridListTile>
                 {diaryData.map((item) => (
-                <GridListTile key={item.year+"/"+item.month+"/"+item.day}>
-                  <Paper />
-                  <img src={item.img} alt={item.img}/>
+                <GridListTile style={{ border: (item.year===curYear&&item.month===curMonth&&item.day===curDate) ? "5px solid #4d9660" : "" }} key={item.year+"/"+item.month+"/"+item.day}>
+                  <img src={item.img} style={{ height:"100%", width:"auto" }} alt={item.img}/>
                   <GridListTileBar
                     title={item.month+"/"+item.day}
                     subtitle={<span>by: { weekCn[item.week] }</span>}
                     actionIcon={
-                      <IconButton aria-label={`info about ${item.year}`}>
+                      <IconButton aria-label={`Record today`}>
                         <EditIcon />
                       </IconButton>
                     }
@@ -641,14 +670,6 @@ export default function App() {
         </Grid>
       </Grid>
 
-      <Grid container item xs={12} justify="center" alignItems="center" >
-        <Grid container item xs={5} justify="flex-start" alignItems="center">
-          <Button id="LAST" onClick={() => {setCurMonth(curMonth-1);}} color="primary" startIcon={<ArrowBackIosIcon />}>{month[curMonth - 2]}</Button>
-        </Grid>
-        <Grid container item xs={5} justify="flex-end" alignItems="center">
-          <Button id="NEXT" onClick={() => {setCurMonth(curMonth+1);}} color="primary" endIcon={<ArrowForwardIosIcon />}>{month[curMonth]}</Button>
-        </Grid>
-      </Grid>   
     </div>
   )
 }

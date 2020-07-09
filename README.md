@@ -508,6 +508,7 @@ declare module "*.svg" {
 
 15 src下建个imgs文件夹，图片随便加一个，到此页面布局基本也到位了，后面开始进入页面交互环节。引入图片过程中遇到了一些bug，就是对应上面这几个步骤了。    
 期间一个小技巧就是页面图片不显示时，访问 http://127.0.0.1:8888/webpack-dev-server 看打包出来的结构中是否有这个资源。    
+既然有图了，顺便加个网站icon，webpack配置HtmlWebpackPlugin里加一句：`favicon: 'src/imgs/img.jpg',`，值得一提的是我记得，如果只是加个网站icon好像不需要上面那么些步骤。    
 
 16 因为最近学到了react hook 所以决定把类组建改写成函数组件，另外增加一点交互内容，但目前的交互还存在bug，暂时先放这里。index.tsx内容替换如下：    
 

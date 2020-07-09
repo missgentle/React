@@ -511,15 +511,14 @@ declare module "*.svg" {
 期间一个小技巧就是页面图片不显示时，访问 http://127.0.0.1:8888/webpack-dev-server 看打包出来的结构中是否有这个资源。    
 既然有图了，顺便加个网站icon，webpack配置HtmlWebpackPlugin里加一句：`favicon: 'src/imgs/img.jpg',`，值得一提的是我记得，如果只是加个网站icon好像不需要上面那么些步骤。    
 
-16 因为最近学到了react hook 所以决定把类组建改写成函数组件，另外去掉了暂时无用的代码，增加了一点交互，但目前还存在bug(不能切换年)，暂时先这样。index.tsx内容替换如下：    
+16 因为最近学到了react hook 所以决定把类组建改写成函数组件，另外页面有一些调整，增加了一点交互。index.tsx内容替换如下：    
 
 ```
 import React, { useState } from 'react';
 import * as ReactDOM from 'react-dom';
 import {
-  Button,Grid,Typography,Breadcrumbs,Link,
-  GridList,GridListTile,ListSubheader,GridListTileBar,
-  IconButton,Paper
+  Grid,Typography,GridList,GridListTile,ListSubheader,
+  GridListTileBar,IconButton,Paper,Button
 } from '@material-ui/core';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import HomeIcon from '@material-ui/icons/Home';

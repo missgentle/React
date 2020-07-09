@@ -510,7 +510,7 @@ declare module "*.svg" {
 期间一个小技巧就是页面图片不显示时，访问 http://127.0.0.1:8888/webpack-dev-server 看打包出来的结构中是否有这个资源。    
 既然有图了，顺便加个网站icon，webpack配置HtmlWebpackPlugin里加一句：`favicon: 'src/imgs/img.jpg',`，值得一提的是我记得，如果只是加个网站icon好像不需要上面那么些步骤。    
 
-16 因为最近学到了react hook 所以决定把类组建改写成函数组件，另外增加一点交互内容，但目前的交互还存在bug，暂时先放这里。index.tsx内容替换如下：    
+16 因为最近学到了react hook 所以决定把类组建改写成函数组件，另外去掉了暂时无用的代码，增加了一点交互，但目前还存在bug(不能切换年)，暂时先这样。index.tsx内容替换如下：    
 
 ```
 import React, { useState } from 'react';
@@ -551,6 +551,7 @@ export default function App() {
   const [curDate, setCurDate] = useState(initState.curDate);
 
   function renderDiaryData (curYear: number, curMonth: number) {
+    diaryData = [];
     let leapFlag: boolean = (curYear%400 === 0) || ((curYear%4 === 0) && (curYear%100 !== 0)) ? true : false ;
     let daysNum: number;
     switch(curMonth){
@@ -603,7 +604,7 @@ export default function App() {
         <Grid container item xs={12} justify="center" alignItems="center" >
           <Grid container item xs={10} justify="center" alignItems="center">
             <h2>
-              { month[curMonth] + " " + curYear }
+              { month[curMonth-1] + " " + curYear }
             </h2>
           </Grid>
         </Grid>
@@ -641,10 +642,10 @@ export default function App() {
 
       <Grid container item xs={12} justify="center" alignItems="center" >
         <Grid container item xs={5} justify="flex-start" alignItems="center">
-          <Button id="LAST" onClick={() => {setCurMonth(curMonth-1);}} color="primary" startIcon={<ArrowBackIosIcon />}>{month[curMonth - 1]}</Button>
+          <Button id="LAST" onClick={() => {setCurMonth(curMonth-1);}} color="primary" startIcon={<ArrowBackIosIcon />}>{month[curMonth - 2]}</Button>
         </Grid>
         <Grid container item xs={5} justify="flex-end" alignItems="center">
-          <Button id="NEXT" onClick={() => {setCurMonth(curMonth+1);}} color="primary" endIcon={<ArrowForwardIosIcon />}>{month[curMonth + 1]}</Button>
+          <Button id="NEXT" onClick={() => {setCurMonth(curMonth+1);}} color="primary" endIcon={<ArrowForwardIosIcon />}>{month[curMonth]}</Button>
         </Grid>
       </Grid>   
     </div>

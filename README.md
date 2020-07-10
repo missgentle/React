@@ -677,5 +677,14 @@ ReactDOM.render(
   <App />,
   document.getElementById('root')
 );
-```
+```    
+
+**遇到的问题：**    
+
+**注：**在处理第一行的空格时，原本的代码`<GridListTile cols={firstDay-1} style={{ height: 'auto' }}></GridListTile>`，存在一个问题：    
+当前月的第一天的周一时，第一行会空出来一格，因为cols={0}时和cols={1}效果一样，后来改成`cols={firstDay < 2 ? 7 : firstDay-1}`也有问题,    
+因为是第一天周日的话，firstDay=0而不是7，所以最终逻辑是`cols={ firstDay === 1 ? 7 : firstDay === 0 ? 6 : firstDay-1 }`。另外，    
+cols={7}实际是空了一行，之所以没有看出空行是因为这里style={{ height: 'auto' }}的缘故。    
+
+
 

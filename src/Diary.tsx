@@ -85,7 +85,8 @@ export default function Diary() {
         <Toolbar />
         <h2> 我第一天 </h2>
         <Typography paragraph> 2020年07月20日 </Typography>
-        <TextareaAutosize style={{width:"100%", fontSize:"16px"}} rows={20} rowsMax={20} defaultValue="今天是20xx年xx月xx日，星期x，天气雷阵雨..."/>
+        <TextareaAutosize style={{width:"100%", fontSize:"16px"}} rows={20} 
+          rowsMax={20} defaultValue="今天是20xx年xx月xx日，星期x，天气雷阵雨..."/>
       </main>
     </div>
   );

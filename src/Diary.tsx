@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
 import { AppBar, Drawer, IconButton, CssBaseline, 
 	Toolbar, List, Typography, Divider, ListItem, ListItemIcon, 
-	ListItemText, TextareaAutosize
+	ListItemText, TextareaAutosize, Button
 }from '@material-ui/core/';
 import WbSunnyIcon from '@material-ui/icons/WbSunny';
 import StarIcon from '@material-ui/icons/Star';
@@ -36,6 +36,27 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
+const pages = [
+    {
+      key: 'myday',
+      title: '我的一天',
+      href: '/myday',
+      icon: <WbSunnyIcon />
+    },
+    {
+      key: 'events',
+      title: '事件',
+      href: '/events',
+      icon: <StarIcon />
+    },
+    {
+      key: 'assignments',
+      title: '任务计划',
+      href: '/assignments',
+      icon: <AssignmentTurnedInIcon />
+    }
+]
+
 export default function Diary() {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
@@ -54,7 +75,7 @@ export default function Diary() {
       <AppBar position="fixed" className={classes.appBar}>
         <Toolbar>
           <IconButton color="inherit" aria-label="open drawer"
-            onClick={handleDrawerOpen} edge="start">
+            onClick={handleDrawerOpen} edge="start" href = "#/">
             <ArrowBackIcon />
           </IconButton>
           <Typography variant="h6" noWrap>
@@ -72,10 +93,12 @@ export default function Diary() {
         <Toolbar />
         <div className={classes.drawerContainer}>
           <List>
-            {['我的一天', '事件', '任务计划'].map((text, index) => (
-              <ListItem button key={text}>
-                <ListItemIcon>{ index % 3 === 0 ? <WbSunnyIcon /> : index % 3 === 1 ? <StarIcon /> : <AssignmentTurnedInIcon /> }</ListItemIcon>
-                <ListItemText primary={text} />
+            {pages.map((page, index) => (
+              <ListItem button key={page.key}>
+                
+                  <ListItemIcon>{ page.icon }</ListItemIcon>
+                  <ListItemText primary={page.title} />
+                
               </ListItem>
             ))}
           </List>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
-  Grid,Typography,GridList,GridListTile,ListSubheader,
-  GridListTileBar,IconButton,Paper,Button
+  Grid,Typography, GridList, GridListTile, ListSubheader,
+  GridListTileBar, IconButton, Paper, Button, MenuItem, Menu
 } from '@material-ui/core';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import HomeIcon from '@material-ui/icons/Home';
@@ -14,20 +14,19 @@ import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import TodayIcon from '@material-ui/icons/Today';
 import Img from '@/imgs/img.jpg';
 
-const curTime = new Date();
-
-const weekEn = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
-const weekCn = ["星期日","星期一","星期二","星期三","星期四","星期五","星期六"];
-const month = ["Jan","Feb","Mar","Apr","May","June","July","Aug","Sept","Oct","Nov","Dec"];
-
-let diaryData = [];
-let firstDay:number;
-
 export default function Calendar() {
+
+  const curTime = new Date();
+  const weekEn = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+  const weekCn = ["星期日","星期一","星期二","星期三","星期四","星期五","星期六"];
+  const month = ["Jan","Feb","Mar","Apr","May","June","July","Aug","Sept","Oct","Nov","Dec"];
+  const ITEM_HEIGHT = 48;
 
   const [curYear, setCurYear] = useState(curTime.getFullYear());
   const [curMonth, setCurMonth] = useState(curTime.getMonth() + 1);
   const [curDate, setCurDate] = useState(curTime.getDate());
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
 
   function monthSwitchBtnClickHandler(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     switch ((event.currentTarget as HTMLButtonElement).id) {
@@ -50,36 +49,77 @@ export default function Calendar() {
     }
   }
 
-  function renderDiaryData (curYear: number, curMonth: number) {
-    diaryData = [];
+  const openDatePicker = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuItemClick = (event: React.MouseEvent<HTMLElement>, year: number) => {
+    setCurYear(year);
+    setAnchorEl(null);
+  };
+
+  const closeDatePicker = () => {
+    setAnchorEl(null);
+  };
+
+
+  function getDaysNum():number {
     let leapFlag: boolean = (curYear%400 === 0) || ((curYear%4 === 0) && (curYear%100 !== 0)) ? true : false ;
-    let daysNum: number;
+    let dNum: number;
     switch(curMonth){
       case 2:
-        daysNum = leapFlag ? 29 : 28;
+        dNum = leapFlag ? 29 : 28;
         break;
       case 4: 
       case 6:
       case 9:
       case 11:
-        daysNum = 30;
+        dNum = 30;
         break;
       default:
-        daysNum = 31;
+        dNum = 31;
     }
-    firstDay = new Date(curYear, curMonth - 1, 1).getDay();
-    for(let j = 1; j < daysNum+1; j++ ){
-      diaryData.push({
-        img: Img,
-        year: curYear,
-        month: curMonth,
-        day: j,
-        week: (j+firstDay-1)%7
-      });
-    }
+    return dNum;
   }
 
-  renderDiaryData(curYear, curMonth);
+  function getFirstDay():number { return (new Date(curYear, curMonth - 1, 1).getDay()); }
+
+  function renderCalendar() {
+    let daysNum = getDaysNum();
+    let firstDay = getFirstDay();
+    let calendarDom = [];
+    for(let j = 1; j < daysNum+1; j++ ){
+      calendarDom.push(
+        <GridListTile style={{ border: (j===curDate) ? "5px solid #4d9660" : "" }} 
+            key={curYear+"/"+curMonth+"/"+j} >
+          <img src={Img} style={{ height:"100%", width:"auto" }} onClick={() => setCurDate(j)}/>
+            <GridListTileBar
+              title={curMonth+"/"+j}
+              subtitle={<span>by: { weekCn[(j+firstDay-1)%7] }</span>}
+              actionIcon={
+                <IconButton aria-label={`Record today`} href="#/Diary">
+                  <EditIcon />
+                </IconButton>
+              }
+            />
+        </GridListTile>
+      )
+    }
+    return calendarDom;
+  }
+
+  function renderDatapicker() {
+    let datapickerDom = [];
+    for(let i:number = curYear - 50; i <curYear + 50; i++ ){
+      datapickerDom.push(
+        <MenuItem key={i} selected={i === curYear} onClick={(event) => handleMenuItemClick(event, i)}>
+          {i}
+        </MenuItem>
+      )
+    }
+    return datapickerDom;
+  }
+
 
   return (
     <div>
@@ -110,9 +150,23 @@ export default function Calendar() {
               <Typography component="div" color="textPrimary" style={{fontSize:24}}>
                 { month[curMonth-1] + " " + curYear }
               </Typography>
-              <IconButton aria-label={`Jump to a day`} color="primary">
+              <IconButton aria-label={`Jump to a day`} color="primary" onClick={openDatePicker}>
                   <TodayIcon />
               </IconButton>
+              <Menu anchorEl={anchorEl} keepMounted open={open} onClose={closeDatePicker} 
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'right',
+                }} 
+                PaperProps={{
+                  style: {
+                    maxHeight: ITEM_HEIGHT * 4.5,
+                    width: '10ch',
+                  },
+                }}
+              >
+                { renderDatapicker() }
+              </Menu>
             </Grid>
             <Grid container item xs={4} justify="flex-end" alignItems="center">
               <Button id="nextMonthBtn" onClick={monthSwitchBtnClickHandler} color="primary" endIcon={<ArrowForwardIosIcon />}>
@@ -132,21 +186,8 @@ export default function Calendar() {
                     </ListSubheader>
                   </GridListTile>
                 ))}
-                <GridListTile cols={ firstDay === 1 ? 7 : firstDay === 0 ? 6 : firstDay-1 } style={{ height: 'auto' }}></GridListTile>
-                {diaryData.map((item) => (
-                <GridListTile style={{ border: (item.year===curYear&&item.month===curMonth&&item.day===curDate) ? "5px solid #4d9660" : "" }} key={item.year+"/"+item.month+"/"+item.day}>
-                  <img src={item.img} style={{ height:"100%", width:"auto" }} alt={item.img}/>
-                  <GridListTileBar
-                    title={item.month+"/"+item.day}
-                    subtitle={<span>by: { weekCn[item.week] }</span>}
-                    actionIcon={
-                      <IconButton aria-label={`Record today`}>
-                        <EditIcon />
-                      </IconButton>
-                    }
-                  />
-                </GridListTile>
-              ))}
+                <GridListTile cols={ getFirstDay() === 1 ? 7 : getFirstDay() === 0 ? 6 : getFirstDay()-1 } style={{ height: 'auto' }}></GridListTile>
+                { renderCalendar() }
             </GridList>
           </Grid>
         </Grid>

@@ -1,5 +1,56 @@
 import React from 'react';
 import { createMuiTheme } from '@material-ui/core/styles';
+import {Localization} from '@material-ui/core/locale';
+
+const zhCN: Localization = {
+  props: {
+    // MuiBreadcrumbs: {
+    //   expandText: 'Show path',
+    // },
+    MuiTablePagination: {
+      backIconButtonText: '上一页',
+      labelRowsPerPage: '每页行数:',
+      labelDisplayedRows: ({ from, to, count }) =>
+        `${from}-${to} 的 ${count !== -1 ? count : `超过 ${to}`}`,
+      nextIconButtonText: '下一页',
+    },
+    MuiRating: {
+      getLabelText: (value) => `${value} 星${value !== 1 ? '星' : ''}`,
+      // emptyLabelText: 'Empty',
+    },
+    MuiAutocomplete: {
+      clearText: '清除',
+      closeText: '关闭',
+      loadingText: '加载中…',
+      noOptionsText: '无选项',
+      openText: '打开',
+    },
+    MuiAlert: {
+      closeText: '关闭',
+    },
+    // MuiPagination: {
+    //   'aria-label': 'Pagination navigation',
+    //   getItemAriaLabel: (type, page, selected) => {
+    //     if (type === 'page') {
+    //       return `${selected ? '' : 'Go to '}page ${page}`;
+    //     }
+    //     if (type === 'first') {
+    //       return 'Go to first page';
+    //     }
+    //     if (type === 'last') {
+    //       return 'Go to last page';
+    //     }
+    //     if (type === 'next') {
+    //       return 'Go to next page';
+    //     }
+    //     if (type === 'previous') {
+    //       return 'Go to previous page';
+    //     }
+    //     return undefined;
+    //   },
+    // },
+  },
+};
 
 export const BlueTheme = createMuiTheme({
   palette: {
@@ -38,15 +89,15 @@ export const BlueTheme = createMuiTheme({
   typography: {
     htmlFontSize: 24, //行内样式无法更改大小的控件
     fontSize: 16,
-    fontFamily: "宋体, Arial",
+    fontFamily: "微软雅黑, Arial",
     subtitle1: {
       fontSize: 16,
-      fontFamily: "华文细黑",
+      fontFamily: "微软雅黑",
       fontWeight: 700
     },
     subtitle2: {
       fontSize: 14,
-      fontFamily: "华文细黑",
+      fontFamily: "微软雅黑",
       fontWeight: 700,
       color: "#fff"
     },
@@ -65,4 +116,4 @@ export const BlueTheme = createMuiTheme({
 
   spacing: 1,
   
-});
+}, zhCN);

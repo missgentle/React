@@ -1,11 +1,11 @@
 import React from 'react';
 import { createMuiTheme } from '@material-ui/core/styles';
-import {Localization} from '@material-ui/core/locale';
+import { Localization } from '@material-ui/core/locale';
 
 const zhCN: Localization = {
   props: {
     // MuiBreadcrumbs: {
-    //   expandText: 'Show path',
+    //   expandText: '显示所有',
     // },
     MuiTablePagination: {
       backIconButtonText: '上一页',
@@ -16,7 +16,7 @@ const zhCN: Localization = {
     },
     MuiRating: {
       getLabelText: (value) => `${value} 星${value !== 1 ? '星' : ''}`,
-      // emptyLabelText: 'Empty',
+      // emptyLabelText: '空',
     },
     MuiAutocomplete: {
       clearText: '清除',
@@ -32,19 +32,19 @@ const zhCN: Localization = {
     //   'aria-label': 'Pagination navigation',
     //   getItemAriaLabel: (type, page, selected) => {
     //     if (type === 'page') {
-    //       return `${selected ? '' : 'Go to '}page ${page}`;
+    //       return `${selected ? '' : '跳到'}第 ${page} 页`;
     //     }
     //     if (type === 'first') {
-    //       return 'Go to first page';
+    //       return '第一页';
     //     }
     //     if (type === 'last') {
-    //       return 'Go to last page';
+    //       return '最后一页';
     //     }
     //     if (type === 'next') {
-    //       return 'Go to next page';
+    //       return '下一页';
     //     }
     //     if (type === 'previous') {
-    //       return 'Go to previous page';
+    //       return '上一页';
     //     }
     //     return undefined;
     //   },

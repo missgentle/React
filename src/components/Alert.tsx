@@ -77,8 +77,7 @@ export const Alert = (props: AlertProps) => {
       <DialogActions>
         {props.optionalType && 
           <StyleButton autoFocus variant="contained" disableElevation 
-            onClick={props.cancelHandler} color="primary" 
-            style={{display:`${props.optionalType?'block':'none'}`}}>
+            onClick={props.cancelHandler} color="primary">
             {props.cancelText ? props.cancelText : '取消'}
           </StyleButton>
         }

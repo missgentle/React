@@ -13,6 +13,7 @@ import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import TodayIcon from '@material-ui/icons/Today';
 import Img from '@/imgs/img.jpg';
+import Topbar from '@/layout/Topbar';
 
 export default function Calendar() {
 
@@ -25,7 +26,7 @@ export default function Calendar() {
   const [curYear, setCurYear] = useState(curTime.getFullYear());
   const [curMonth, setCurMonth] = useState(curTime.getMonth() + 1);
   const [curDate, setCurDate] = useState(curTime.getDate());
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
   function monthSwitchBtnClickHandler(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
@@ -97,7 +98,8 @@ export default function Calendar() {
               title={curMonth+"/"+j}
               subtitle={<span>by: { weekCn[(j+firstDay-1)%7] }</span>}
               actionIcon={
-                <IconButton aria-label={`Record today`} href="#/Diary">
+                <IconButton aria-label={`Record today`} 
+                  href={'#/Diary?curYear='+curYear+'&curMonth='+curMonth+'&curDate='+j}>
                   <EditIcon />
                 </IconButton>
               }
@@ -110,7 +112,7 @@ export default function Calendar() {
 
   function renderDatapicker() {
     let datapickerDom = [];
-    for(let i:number = curYear - 50; i <curYear + 50; i++ ){
+    for(let i:number = curYear - 10; i <curYear + 10; i++ ){
       datapickerDom.push(
         <MenuItem key={i} selected={i === curYear} onClick={(event) => handleMenuItemClick(event, i)}>
           {i}
@@ -120,25 +122,10 @@ export default function Calendar() {
     return datapickerDom;
   }
 
-
   return (
     <div>
       <Grid container spacing={2}>
-        <Grid container item xs={12} justify="center" alignItems="center" style={{ backgroundColor: '#4d9660' }}>
-          <Grid container item xs={10} justify="center" alignItems="center">
-            <Typography component="div" color="textPrimary" style={{fontSize:32}}>
-                💗 - Mini Diary - 💗 
-            </Typography>
-          </Grid>
-        </Grid>
-        <Grid container item xs={12} justify="center" alignItems="center"  style={{ backgroundColor: '#4d9660' }}>
-          <Grid container item xs={10} justify="center" alignItems="center">
-            <Typography component="div" color="textSecondary" >
-              An achievable goal: Be happy today ❤ And next step: Be happy everyday
-            </Typography>
-          </Grid>
-        </Grid>
-        
+        <Topbar />
         <Grid container item xs={12} justify="center" alignItems="center" >
           <Grid container item xs={10} justify="center" alignItems="center">
             <Grid container item xs={4} justify="flex-start" alignItems="center">

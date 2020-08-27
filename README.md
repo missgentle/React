@@ -511,7 +511,7 @@ declare module "*.svg" {
 期间一个小技巧就是页面图片不显示时，访问 http://127.0.0.1:8888/webpack-dev-server 看打包出来的结构中是否有这个资源。    
 既然有图了，顺便加个网站icon，webpack配置HtmlWebpackPlugin里加一句：`favicon: 'src/imgs/img.jpg',`，值得一提的是我记得，如果只是加个网站icon好像不需要上面那么些步骤。    
 
-16 因为最近学到了react hook 所以决定把类组建改写成函数组件，另外页面有一些调整，增加了一点交互。index.tsx内容替换如下：    
+16 因为最近学到了react hook ，官网看这里https://reactjs.org/docs/hooks-intro.html，所以决定把类组建改写成函数组件，另外页面有一些调整，增加了一点交互。index.tsx内容替换如下：    
 
 ```
 import React, { useState } from 'react';
@@ -686,5 +686,4 @@ ReactDOM.render(
 因为是第一天周日的话，firstDay=0而不是7，所以最终逻辑是`cols={ firstDay === 1 ? 7 : firstDay === 0 ? 6 : firstDay-1 }`。另外，    
 cols={7}实际是空了一行，之所以没有看出空行是因为这里style={{ height: 'auto' }}的缘故。    
 
-
-
+篇幅原因，项目创建过程的介绍到此为止。    

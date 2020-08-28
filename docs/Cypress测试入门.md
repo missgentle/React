@@ -104,5 +104,98 @@ Cypress构建在这些流行的工具和框架之上。
 - 对结果应用程序状态进行断言    
 
 您可能还会看到这样的措辞:“Given, When, Then”，或“Arrange, Act, Assert”。
-但其思想是:首先将应用程序置于特定状态，然后在应用程序中采取某些操作导致其更改，最后检查结果应用程序状态。
+但其思想是:首先将应用程序置于特定状态，然后在应用程序中采取某些操作导致其更改，最后检查结果应用程序状态。    
+
+**第一步：访问页面    
+
+我们可以将想要访问的URL传递到cy.visit()。    
+
+```
+describe('My First Test', () => {
+	it('visite the kitchen sink', () => {
+		cy.visit('http://example.cypress.io')
+	})
+})
+```    
+
+Cypress不是一个通用的web自动化工具。它不太适合编写不受您控制的实时、生产网站的脚本。因为：    
+- 它们可能会检测到您是一个脚本并阻止您的访问(谷歌会这样做)。    
+- 它们可能启用了阻止Cypress工作的安全特性。    
+
+**第二步：查询元素    
+
+按内容查找元素，我们将使用cy.contains()。    
+
+```
+describe('My First Test', () => {
+  it('finds the content "type"', () => {
+    cy.visit('https://example.cypress.io')
+    cy.contains('type')
+  })
+})
+```    
+
+即使不添加断言，我们也知道一切正常!这是因为Cypress的许多命令在没有找到它们期望找到的东西时就会失败。这被称为默认断言。    
+如果元素可见，点击contains type 页面就会定位到type出现的位置。不可见元素会带有不可见标志。    
+如果查找的元素不存在它会自动等待并重试，因为它期望最终能在DOM中找到内容。它不会立即失败!至少4秒以上。    
+
+**第三步：点击元素    
+
+在cy.contains()的命令末尾添加一个.click()命令。    
+`cy.contains('type').click()`    
+
+对一个不可见元素进行点击会报错比如`cy.contains('ser').click()`    
+但我尝试`cy.contains('Command').click().contains('ser').click()`却还是报错，不清楚contains()的查找范围。
+
+**第四步：做出断言    
+
+我们可以通过查找URL并使用.should()将断言链接到该URL。    
+`cy.url().should('include', '/commands/actions')`    
+
+在给定的测试中，我们不局限于单个交互和断言。实际上，应用程序中的许多交互可能需要多个步骤，并且可能以多种方式改变应用程序状态。    
+我们可以通过添加另一个链来与这个新页面上的元素交互并验证其行为，从而继续这个测试中的交互和断言。    
+我们可以使用cy.get()根据CSS类选择元素。然后使用.type()命令将文本输入到选定的输入中。最后，验证输入的值是否反映了用另一个.should()输入的文本。    
+
+```
+describe('My First Test', () => {
+  it('Gets, types and asserts', () => {
+    cy.visit('https://example.cypress.io')
+
+    cy.contains('type').click()
+
+    // Should be on a new URL which includes '/commands/actions'
+    cy.url().should('include', '/commands/actions')
+
+    // Get an input, type into it and verify that the value has been updated
+    cy.get('.action-email')
+      .type('fake@email.com')
+      .should('have.value', 'fake@email.com')
+  })
+})
+```    
+
+值得注意的是，这个测试跨越了两个不同的页面。Cypress自动检测页面转换事件之类的事件，并自动停止运行命令，直到下一个页面完成加载。    
+这意味着您不必担心意外地对过期页面运行命令，也不必担心对部分加载的页面运行命令。    
+在本例中，当Cypress检测到一个页面转换事件时，它会自动将单个页面加载事件的超时时间增加到60秒而不再是4秒。    
+换句话说，基于命令和发生的事件，Cypress自动修改其预期超时以匹配web应用程序行为。    
+这些不同的超时在配置文档中定义。    
+
+5 调试    
+
+Cypress附带了许多调试工具，可以帮助您理解测试。如：    
+
+- 回到每个命令的快照。
+- 参见发生的特殊页面事件。
+- 接收关于每个命令的额外输出。
+- 在多个命令快照之间向前/向后迈步。
+- 暂停命令并迭代地单步执行它们。
+- 当发现隐藏元素或多个元素时可视化。
+
+## 时间旅行    
+
+
+
+
+
+
 

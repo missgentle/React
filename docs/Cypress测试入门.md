@@ -262,14 +262,122 @@ describe('The Home Page', () => {
 
 2.测试策略    
 
+**播种数据    
 
+要测试各种页面状态(如空视图或分页视图)，需要在服务器上播种，以便测试该状态。通常有三种方式来促进这与Cypress:    
 
+- cy.exec() 运行系统命令    
+- cy.task() 通过插件文件在Node中运行代码    
+- cy.request() 发出HTTP请求    
 
+如果您在服务器上运行node.js，您可以添加一个before或beforeEach钩子来执行npm任务。
 
+```
+describe('The Home Page', () => {
+  beforeEach(() => {
+    // reset and seed the database prior to every test
+    cy.exec('npm run db:reset && npm run db:seed')
+  })
 
+  it('successfully loads', () => {
+    cy.visit('/')
+  })
+})
+```    
 
+有时为了告诉服务器您想要创建的确切状态需要将多个请求组合在一起，使用Cypress，还有其他几种方法可以提供更好更快的体验。    
 
+**服务器存根    
 
+一种有效的方法是完全绕过它，而不是播撒种子并与服务器通信。你仍然会收到来自服务器的所有常规HTML/JS/CSS资源，并将继续以同样的方式对其进行cy.visit()。您可以存根它的JSON响应。    
 
+这意味着不必重新设置数据库，也不必按照我们想要的状态对其播种，您可以强制服务器按照您想要的方式响应。
+这样，我们不仅不需要同步服务器和浏览器之间的状态，而且还防止了测试状态的变化。这意味着测试不会建立可能影响其他测试的状态。    
 
+另一个好处是，这使您可以在不需要服务器契约存在的情况下构建应用程序。您可以按照您希望的数据结构方式构建它，甚至可以测试所有的边界情况，而不需要服务器。
 
+虽然存根很棒，但这意味着您不能保证这些响应有效负载实际上与服务器将发送的内容相匹配。然而，仍然有许多有效的方法来解决这个问题:    
+
+Generate the fixture stubs ahead of time    
+Write a single e2e test without stubs, and then stub the rest    
+
+**登录    
+
+```
+describe('The Login Page', () => {
+  beforeEach(() => {
+    // reset and seed the database prior to every test
+    cy.exec('npm run db:reset && npm run db:seed')
+
+    // seed a user in the DB that we can control from our tests
+    // assuming it generates a random password for us
+    cy.request('POST', '/test/seed/user', { username: 'jane.lane' })
+      .its('body')
+      .as('currentUser')
+  })
+
+  it('sets auth cookie when logging in via form submission', function () {
+    // destructuring assignment of the this.currentUser object
+    const { username, password } = this.currentUser
+
+    cy.visit('/login')
+
+    cy.get('input[name=username]').type(username)
+
+    // {enter} causes the form to submit
+    cy.get('input[name=password]').type(`${password}{enter}`)
+
+    // we should be redirected to /dashboard
+    cy.url().should('include', '/dashboard')
+
+    // our auth cookie should be present
+    cy.getCookie('your-session-cookie').should('exist')
+
+    // UI should reflect this user being logged in
+    cy.get('h1').should('contain', 'jane.lane')
+  })
+})
+```    
+
+不要在每次测试前使用UI登录。不要使用你的UI来建立状态!它非常缓慢，笨重，而且没有必要。    
+我们可以通过使用cy.request()跳过需要使用UI的部分。因为cy.request()会在幕后自动获取和设置cookie，所以我们实际上可以使用它来构建状态。    
+
+我们不需要实际使用UI就可以登录。这节省了访问登录页面、填写用户名、密码以及在每次测试前等待服务器重定向我们的大量时间。
+
+```
+describe('The Dashboard Page', () => {
+  beforeEach(() => {
+    // reset and seed the database prior to every test
+    cy.exec('npm run db:reset && npm run db:seed')
+
+    // seed a user in the DB that we can control from our tests
+    // assuming it generates a random password for us
+    cy.request('POST', '/test/seed/user', { username: 'jane.lane' })
+      .its('body')
+      .as('currentUser')
+  })
+
+  it('logs in programmatically without using the UI', function () {
+    // destructuring assignment of the this.currentUser object
+    const { username, password } = this.currentUser
+
+    // programmatically log us in without needing the UI
+    cy.request('POST', '/login', {
+      username,
+      password
+    })
+
+    // now that we're logged in, we can visit
+    // any kind of restricted route!
+    cy.visit('/dashboard')
+
+    // our auth cookie should be present
+    cy.getCookie('your-session-cookie').should('exist')
+
+    // UI should reflect this user being logged in
+    cy.get('h1').should('contain', 'jane.lane')
+  })
+})
+```    
+
+当处理系统中任何需要在其他地方设置状态的区域时，请使用上述方法。只要记住——不要使用你的UI!

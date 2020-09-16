@@ -25,6 +25,7 @@ const $cyElement = cy.get('.element')
 当Cypress无法从其选择器中找到任何匹配的DOM元素时，Cypress自动重试查询，直到:    
 1. 元素找到了    
 2. 达到设置的超时    
+
 Cypress用更适合实际web应用程序工作的健壮的返回和超时逻辑包装了所有DOM查询。这使得Cypress更加健壮，并且对其他测试工具中出现的许多常见问题具有免疫力。    
 
 在Cypress中，当您希望直接与DOM元素交互时，可以使用一个接收该元素作为第一个参数的回调函数调用then()。当您想要完全跳过retry-and-timeout功能功能并执行传统的同步工作时，请使用Cypress.$。    

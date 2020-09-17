@@ -68,6 +68,87 @@ cy.get('.my-slow-selector', { timeout: 10000 })
 它会自动等待，直到元素达到“actionable”状态:不是隐藏的/被覆盖/disabled/animating    
 这也有助于防止在测试中与应用程序交互时出现flake。通常可以使用force选项覆盖此行为。    
 
+断言允许您做一些事情，比如确保元素是可见的，或者确保元素具有特定的属性、CSS类或状态。断言是使您能够描述应用程序所需状态的命令。    
+Cypress将自动等待，直到您的元素达到此状态，或者如果断言未通过，则测试失败。    
+
+```
+cy.get(':checkbox').should('be.disabled')
+
+cy.get('form').should('have.class', 'form-horizontal')
+
+cy.get('input').should('not.have.value', 'US')
+```    
+
+一个新的Cypress链总是以cy.[command]开始，其中命令生成的内容将建立其他可以称为next的命令(chain)。    
+有些方法产生空值，因此不能被链接，比如cy.clearCookies()。    
+有些方法，比如cy.get()或cy.contains()，会产生一个DOM元素，允许进一步的命令链接到它们上(假如它们需要DOM subjects)，比如.click()或再一次cy.contains()。    
+
+一些命令不能被链接:    
+仅来自cy，这意味着它们不操作subjects:cy. clearcookie()。    
+生成特定类型subjects(如DOM元素)的命令:.type()。    
+同时来自cy或来自一个主从命令:cy.contains()。    
+
+一些命令产生:    
+null，这意味着没有命令可以在命令:.clearcookie()之后被链接。    
+他们最初使用的是同一个subjects:.click()。    
+一个新的subjects，适合于命令.wait()。    
+
+```
+cy.clearCookies()         // 生成'null'不可能链接
+
+cy.get('.main-container') // 生成一个匹配的DOM元素数组
+  .contains('Headlines')  // 生成包含内容的第一个DOM元素
+  .click()                // 从前面的命令生成相同的DOM元素
+```    
+
+Cypress的命令不会return他们的subjects，而是yield他们。请记住:Cypress命令是异步的，并排队等待稍后执行。在执行过程中，subjects从一个命令生成到下一个命令。    
+
+为了解决引用元素的问题，Cypress有一个称为混叠(aliasing)的特性。别名帮助您存储和保存元素引用，以供将来使用。    
+
+想要进入命令流并直接接触subjects，在命令链中添加一个then()。当前一个命令解析时，它将以yield subject作为第一个参数调用回调函数。    
+
+如果希望在then()之后继续链接命令，则需要指定希望yield的subject，这可以通过返回值不是null或undefined来实现。Cypress会把它交给你的下一个命令。    
+
+```
+cy
+  // 找到id为'some-link'的元素
+  .get('#some-link')
+
+  .then(($myElement) => {
+    // ...一些任意的代码
+
+    // 获取它的href属性
+    const href = $myElement.prop('href')
+
+    // 去掉hash字符及其后面的所有内容
+    return href.replace(/(#.*)/, '')
+  })
+  .then((href) => {
+    // href现在是一个新的subject
+    // 现在可以继续做些什么
+  })
+```    
+
+Cypress增加了一些称为别名的功能，用于快速引用过去的主题。    
+
+```
+cy
+  .get('.my-selector')
+  .as('myElement') // 设置别名
+  .click()
+
+/* 更多操作 */
+
+cy
+  .get('@myElement') // 像以前一样重新查询DOM(仅在必要时)
+  .click()
+```    
+
+这样，当元素仍然在DOM中时，我们就可以重用DOM查询来进行更快的测试，并且当元素没有立即在DOM中找到时，它会自动为我们处理重新查询DOM。这在处理需要大量重新渲染的前端框架时特别有用!    
+
+
+
+
 
 
 

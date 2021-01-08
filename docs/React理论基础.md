@@ -7,16 +7,7 @@
 
 不可变性最主要的优势在于它可以帮助我们在 React 中创建 pure components。我们可以由此确定组件重新渲染的时机。
 
-“函数组件”
-如果你想写的组件只包含一个 render 方法，并且不包含 state，那么使用函数组件就会更简单。我们不需要定义一个继承于 React.Component 的类，我们可以定义一个函数，这个函数接收 props 作为参数，然后返回需要渲染的元素。函数组件写起来并不像 class 组件那么繁琐，很多组件都可以使用函数组件来写。
 
-key 是 React 中一个特殊的保留属性（还有一个是 ref，拥有更高级的特性）。当 React 元素被创建出来的时候，React 会提取出 key 属性，然后把 key 直接存储在返回的元素上。虽然 key 看起来好像是 props 中的一个，但是你不能通过 this.props.key 来获取 key。React 会通过 key 来自动判断哪些组件需要更新。组件是不能访问到它的 key 的。
-
-我们强烈推荐，每次只要你构建动态列表的时候，都要指定一个合适的 key。如果你没有找到一个合适的 key，那么你就需要考虑重新整理你的数据结构了，这样才能有合适的 key。
-
-如果你没有指定任何 key，React 会发出警告，并且会把数组的索引当作默认的 key。但是如果想要对列表进行重新排序、新增、删除操作时，把数组索引作为 key 是有问题的。显式地使用 key={i} 来指定 key 确实会消除警告，但是仍然和数组索引存在同样的问题，所以大多数情况下最好不要这么做。
-
-组件的 key 值并不需要在全局都保证唯一，只需要在当前的同级元素保证唯一即可。
 
 Chrome-React调试插件https://www.cnblogs.com/shenwh/p/12067029.html
 Sublime-React格式化 https://blog.csdn.net/HuangLin_Developer/article/details/89394949
@@ -118,13 +109,14 @@ function Welcome(props) {
   return <h1>Hello, {props.name}</h1>;
 }
 这个函数是一个有效的React组件，因为它接受一个带有数据的“props”(代表属性)对象参数，并返回一个React元素。我们称这些组件为“函数组件”，因为它们实际上是JavaScript函数。
+
 你也可以使用ES6类来定义组件:
 class Welcome extends React.Component {
   render() {
     return <h1>Hello, {this.props.name}</h1>;
   }
 }
-
+如果你想写的组件只包含一个 render 方法，并且不包含 state，那么使用函数组件就会更简单。我们不需要定义一个继承于 React.Component 的类，我们可以定义一个函数，这个函数接收 props 作为参数，然后返回需要渲染的元素。函数组件写起来并不像 类组件那么繁琐，很多组件都可以使用函数组件来写。
 
 props
 当React看到表示用户定义组件的元素时，它将JSX属性和子组件作为单个对象传递给该组件。我们称这个物体为“props”。
@@ -138,7 +130,7 @@ ReactDOM.render(
 );
 props是只读的。无论您将组件声明为函数还是类，它都绝不能修改自己的props。
 React非常灵活，但它有一个严格的规则:
-所有React组件就它们的道具而言必须像纯函数一样。不试图改变它们的输入，并且对于相同的输入总是返回相同的结果。
+所有React组件就它们的props而言必须像纯函数一样。不试图改变它们的输入，并且对于相同的输入总是返回相同的结果。
 在 JavaScript class 中，每次你定义其子类的构造函数时，都需要调用 super 方法。因此，在所有含有构造函数的的 React 组件中，构造函数必须以 super(props) 开头。
 
 
@@ -146,7 +138,7 @@ React非常灵活，但它有一个严格的规则:
 state
 state允许React组件随时间改变其输出，以响应用户操作、网络响应和其他任何事情。
 state是私有的，完全由组件控制。
-props(“属性”的缩写)和state都是纯JavaScript对象。尽管它们都保存着影响渲染输出的信息，但它们在一个重要方面是不同的:道具传递给组件(类似于函数参数)，而状态是在组件中管理的(类似于函数中声明的变量)。
+props(“属性”的缩写)和state都是纯JavaScript对象。尽管它们都保存着影响渲染输出的信息，但它们在一个重要方面是不同的:props传递给组件(类似于函数参数)，而状态是在组件中管理的(类似于函数中声明的变量)。
 
 关于State，有三件事您应该知道
 1不直接修改状态 而要使用setState()。你唯一能直接设置State的地方是构造函数。
@@ -162,9 +154,9 @@ this.setState((state, props) => ({
 单向数据流
 在React应用中，组件是有状态还是无状态被认为是组件的实现细节，父组件和子组件都不能知道某个组件是有状态的还是无状态的，它们也不应该关心它是定义为函数还是类。
 这就是为什么状态经常被称为局部的或封装的原因。除了拥有和设置它的组件外，其他组件都不能访问它。
-一个组件可以选择把它的状态作为道具传递给它的子组件，子组件将在它的props中接收数据，而不知道它是来自父组件的状态，还是props，或是手动输入的，这通常称为“自顶向下”或“单向”数据流。
+一个组件可以选择把它的状态作为props传递给它的子组件，子组件将在它的props中接收数据，而不知道它是来自父组件的状态，还是props，或是手动输入的，这通常称为“自顶向下”或“单向”数据流。
 任何状态总是由某些特定的组件拥有，从该状态派生的任何数据或UI只能影响树中它们“下面”的组件。
-如果你把组件树想象成一个道具瀑布，那么每个组件的状态就像一个额外的水源，它在任意点与之连接，但也向下流动。
+如果你把组件树想象成一个props瀑布，那么每个组件的状态就像一个额外的水源，它在任意点与之连接，但也向下流动。
 React的单向数据流(也称为单向绑定)使一切都保持模块化和快速。
 
 
@@ -251,7 +243,7 @@ ReactDOM.render(
 在JavaScript中，类方法默认情况下是不绑定的。如果你忘了绑这个。handleClick并将其传递给onClick，当函数被实际调用时，这将是未定义的。
 这不是特定反应行为;这是JavaScript中函数工作方式的一部分。通常，如果你引用的方法后面没有()，比如onClick={this.handleClick}，你应该绑定那个方法。
 如果调用bind让您感到烦恼，有两种方法可以解决这个问题。如果你正在使用实验性的公共类字段语法，你可以使用类字段来正确地绑定回调函数
-如果你没有使用类字段语法，你可以在回调函数中使用箭头函数。这种语法的问题是，每次呈现时都会创建一个不同的回调函数。在大多数情况下，这是可以的。然而，如果这个回调被作为一个道具传递给较低的组件，这些组件可能会做额外的重新渲染。我们通常建议在构造函数中绑定或使用类字段语法，以避免这类性能问题。
+如果你没有使用类字段语法，你可以在回调函数中使用箭头函数。这种语法的问题是，每次呈现时都会创建一个不同的回调函数。在大多数情况下，这是可以的。然而，如果这个回调被作为一个props传递给较低的组件，这些组件可能会做额外的重新渲染。我们通常建议在构造函数中绑定或使用类字段语法，以避免这类性能问题。
 
 在循环中，通常希望向事件处理程序传递额外的参数。例如，如果id代表一个行标识，以下两种写法都可以：
 <button onClick={(e) => this.deleteRow(id, e)}>Delete Row</button>
@@ -339,8 +331,9 @@ ReactDOM.render(
 );
 
 列表元素的key
-key是创建元素列表时需要包含的特殊字符串属性。帮助React识别哪些项目被更改、添加或删除。有利于在列表头部插入新节点时提高效率。选择键的最佳方法是使用在其兄弟列表中唯一标识列表项的字符串。大多数情况下，你会使用数据中的id作为key。当你没有稳定的id渲染项目，你可以使用项目索引，如果项目的顺序可能会改变，我们不建议使用索引。这可能会对性能产生负面影响，并可能导致组件状态出现问题。如果您选择不为列表项指定显式键，那么React将默认使用索引作为键。
-何时需要key？一个好的经验法则是map()调用中的元素需要key。key要在兄弟间唯一，不需要全局唯一。key不会传递即无法通过props.key访问到，需要使用key值时要单独传递新属性。键应该是稳定的、可预测的和惟一的。不建议使用索引，在发生顺序变化时可能引发意料外的渲染，不建议使用随机数，这可能导致性能下降和在子组件中丢失状态。
+key是创建元素列表时需要包含的特殊字符串属性，它是 React 中一个特殊的保留属性（还有一个是 ref，拥有更高级的特性）。当 React 元素被创建出来的时候，React 会提取出 key 属性，然后把 key 直接存储在返回的元素上。 key帮助React识别哪些项目被更改、添加或删除来自动判断哪些组件需要更新。有利于在列表头部插入新节点时提高效率。选择key的最佳方法是使用在其兄弟列表中唯一标识列表项的字符串。大多数情况下，你会使用数据中的id作为key。当你没有稳定的id渲染项目，你可以使用项目索引，如果项目的顺序可能会改变，我们不建议使用索引。这可能会对性能产生负面影响，并可能导致组件状态出现问题。如果你没有指定任何 key，React 会发出警告，并且会把索引当作默认的 key。显式地使用 key={i} 来指定 key 确实会消除警告，但是如果想要对列表进行重新排序、新增、删除操作时，把数组索引作为 key 依然是有问题的。所以大多数情况下最好不要这么做。组件不能访问到它的 key 。同时key也不会传递即子组件无法通过props.key访问到，虽然 key 看起来好像是 props 中的一个，当需要使用key值时要单独传递新属性。
+
+何时需要key？构建动态列表的时候。一个好的经验法则是map()调用中的元素需要key。key要在同级元素间唯一，不需要全局唯一。key应该是稳定的、可预测的和惟一的。不建议使用索引，在发生顺序变化时可能引发意料外的渲染，不建议使用随机数，这可能导致性能下降和在子组件中丢失状态。
 如果map()主体嵌套太深，现在可能是提取组件的好时机。
 
 function ListItem(props) {
@@ -360,19 +353,14 @@ function NumberList(props) {
 }
 
 
-“受控组件” 对于受控组件，输入值总是由React state驱动。
-
 状态提升
-在React中，共享状态是通过将其移动到需要它的组件的最近的公共祖先来实现的。这被称为“状态提升”。
+在React中，共享状态是通过将其移动到需要它的组件的最近的公共祖先来实现的。这被称为“状态提升”。 
 通常，状态首先被添加到需要它来呈现的组件中。然后，如果其他组件也需要它，您可以将它提升到它们最近的共同祖先。您应该依赖自顶向下的数据流，而不是尝试在不同组件之间同步状态。
 与双向绑定方法相比，提升状态需要编写更多的“样板”代码，但作为一个好处，它需要更少的工作来发现和隔离bug。因为任何状态都“存在”于某些组件中，而该组件本身就可以改变它，所以漏洞的表面积就大大减少了。此外，您可以实现任何自定义逻辑来拒绝或转换用户输入。 
-当你遇到需要同时获取多个子组件数据，或者两个组件之间需要相互通讯的情况时，需要把子组件的 state 数据提升至其共同的父组件当中保存。之后父组件可以通过 props 将状态数据传递到子组件当中。这样应用当中所有组件的状态数据就能够更方便地同步共享了。
-像这种将组件的 state 提升到父组件的情形在重构 React 组件时经常会遇到。
-我们知道道具是只读的。当state 提升到父组件时，就不可以调用this.setState()来更改它了。
+当你遇到需要同时获取多个子组件数据，或者两个组件之间需要相互通讯的情况时，需要把子组件的 state 数据提升至其共同的父组件当中保存。之后父组件可以通过 props 将状态数据传递到子组件当中。这样应用当中所有组件的状态数据就能够更方便地同步共享了。像这种将组件的 state 提升到父组件的情形在重构 React 组件时经常会遇到。 
+我们知道props是只读的。当state 提升到父组件时，就不可以调用this.setState()来更改它了。
 在React中，这通常是通过让组件“受控”来解决的。
-
-
-
+“受控组件” 对于受控组件，输入值总是由React state驱动。
 
 
 React思维
@@ -387,7 +375,7 @@ React思维
 步骤3:确定UI状态的最小(但完整)表示
 它是通过props从父级传递进来的吗?如果是这样，它可能不是state。
 它会随时间保持不变吗?如果是这样，它可能不是state。
-你能根据组件中的其他状态或道具来计算吗?如果是这样，它就不是state。
+你能根据组件中的其他状态或props来计算吗?如果是这样，它就不是state。
 
 步骤4:确定React哪个组件拥有state
 识别每个基于那个状态呈现东西的组件。
@@ -399,25 +387,77 @@ React思维
 层次结构深处的表单组件更新更高层次的组件的state。 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 懒加载lazy
+React.lazy函数允许将动态导入呈现为常规组件。
+Before:
+import OtherComponent from './OtherComponent';
+After:
+const OtherComponent = React.lazy(() => import('./OtherComponent'));
+当这个组件第一次被渲染时，它会自动加载包含OtherComponent的bundle。
+React.lazy接受一个必须调用动态import()的函数。这必须返回一个Promise，它会解析为一个带有包含React组件的默认导出的模块。
+然后，惰性组件应该在悬空组件中呈现，这允许我们在等待惰性组件加载时显示一些后备内容(比如加载指示器)。
+import React, { Suspense } from 'react';
+const OtherComponent = React.lazy(() => import('./OtherComponent'));
+const AnotherComponent = React.lazy(() => import('./AnotherComponent'));
+
+function MyComponent() {
+  return (
+    <div>
+      <Suspense fallback={<div>Loading...</div>}>
+        <section>
+          <OtherComponent />
+          <AnotherComponent />
+        </section>
+      </Suspense>
+    </div>
+  );
+}
+下面是一个如何使用React Router和React.lazy等库在应用中设置基于路由的代码分割的例子。
+import React, { Suspense, lazy } from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+
+const Home = lazy(() => import('./routes/Home'));
+const About = lazy(() => import('./routes/About'));
+
+const App = () => (
+  <Router>
+    <Suspense fallback={<div>Loading...</div>}>
+      <Switch>
+        <Route exact path="/" component={Home}/>
+        <Route path="/about" component={About}/>
+      </Switch>
+    </Suspense>
+  </Router>
+);
+
+
 上下文context
+提供了一种通过组件树传递数据的方法，而不必在每个级别手动传递props。
+在一个典型的React应用程序中，数据是通过props自顶向下传递的(父元素到子元素)，但是对于应用程序中许多组件都需要的特定类型的props(例如locale preference、UI theme)来说，这可能会很麻烦。Context提供了一种在组件之间共享这些值的方法，而不必在树的每一层都显式地传递一个props。
 当某些数据需要由不同嵌套级别的许多组件访问时，主要使用上下文。谨慎地应用它，因为它使组件重用更加困难。上下文允许您将此类数据及其更改“广播”给下面的所有组件。使用上下文可能比其他方法更简单的常见示例包括管理当前语言环境、主题或数据缓存。
 如果您只是想避免在许多级别传递一些props，那么组件组合通常是比上下文更简单的解决方案。
 将子组件作为props传递，也可用此模式将子节点与其直接父节点解耦
 
-错误边界的工作原理类似于JavaScript catch{}块，但它用于组件。只有类组件可以是错误边界。
+错误边界
+import React, { Suspense } from 'react';
+import MyErrorBoundary from './MyErrorBoundary';
+
+const OtherComponent = React.lazy(() => import('./OtherComponent'));
+const AnotherComponent = React.lazy(() => import('./AnotherComponent'));
+
+const MyComponent = () => (
+  <div>
+    <MyErrorBoundary>
+      <Suspense fallback={<div>Loading...</div>}>
+        <section>
+          <OtherComponent />
+          <AnotherComponent />
+        </section>
+      </Suspense>
+    </MyErrorBoundary>
+  </div>
+);
+工作原理类似于JavaScript catch{}块，但它用于组件。只有类组件可以是错误边界。
 错误边界只捕获树中它们下面的组件中的错误。错误边界不能捕获自身内部的错误。如果错误边界无法呈现错误消息，则错误将传播到它上面最近的错误边界。这也类似于JavaScript中的catch{}块的工作方式。
 错误边界的粒度由您决定。您可以包装顶级路由组件以向用户显示“出错了”消息，就像服务器端框架经常处理崩溃一样。您还可以将单个小部件包装在一个错误边界中，以保护它们不会崩溃应用程序的其余部分。
 错误边界不捕捉事件处理程序内部的错误。React不需要从事件处理程序中的错误中恢复错误边界。与呈现方法和生命周期方法不同，事件处理程序不会在呈现期间发生。所以如果他们抛出异常了，React仍然知道在屏幕上显示什么。如果你需要捕获事件处理程序内部的错误，使用常规的JavaScript try / catch语句:
@@ -428,12 +468,12 @@ try / catch很棒，但它只适用于命令式代码: 然而，React组件是�
 shouldComponentUpdate 在重新呈现过程开始之前被触发。
 即使React只更新更改的DOM节点，重新呈现仍然需要一些时间。在许多情况下，这不是问题，但是如果减速很明显，您可以通过覆盖生命周期函数shouldComponentUpdate来加速这一切，该函数在重新呈现过程开始之前被触发。这个函数的默认实现返回true，离开React来执行更新
 如果您知道在某些情况下您的组件不需要更新，那么您可以从shouldComponentUpdate返回false，从而跳过整个呈现过程，包括在这个组件和下面的组件上调用render()。
-在大多数情况下，不需要手工编写shouldComponentUpdate()，您可以从React.PureComponent继承。这相当于通过对当前和以前的道具和状态进行浅层比较来实现shouldComponentUpdate()。
+在大多数情况下，不需要手工编写shouldComponentUpdate()，您可以从React.PureComponent继承。这相当于通过对当前和以前的props和状态进行浅层比较来实现shouldComponentUpdate()。
 
 Forwarding Refs
 一种通过组件自动将Ref传递给其子组件的技术。对于应用程序中的大多数组件来说，这通常是不必要的。但是，它对某些类型的组件很有用，特别是在可重用组件库中。
 Refs提供了一种访问DOM节点或对render方法中创建的元素做出反应的方法。
-在典型的React数据流中，道具是父组件与子组件交互的唯一方式。要修改一个孩子，你需要用新的道具重新渲染它。但是，在一些情况下，您需要在典型数据流之外强制修改子流。要修改的子元素可以是React组件的实例，也可以是DOM元素。对于这两种情况，React提供了一个逃生口。
+在典型的React数据流中，props是父组件与子组件交互的唯一方式。要修改一个孩子，你需要用新的props重新渲染它。但是，在一些情况下，您需要在典型数据流之外强制修改子流。要修改的子元素可以是React组件的实例，也可以是DOM元素。对于这两种情况，React提供了一个逃生口。
 
 这里有一些很好的参考用例:
 	管理焦点、文本选择或媒体播放。
@@ -442,6 +482,7 @@ Refs提供了一种访问DOM节点或对render方法中创建的元素做出反�
 
 
 Higher-Order Components  --- 一种组合模式 提取出可重用行为减少代码量 一个方法接收组件参数返回新的带有可重用行为的组件 注意静态方法要复制 refs无法重用 如果向HOC添加ref, ref将引用最外层的容器组件，而不是被包装的组件。幸运的是，我们可以使用React.forwardRef API显式地将refs转发到内部组件。
+
 Render Props  ---  一个提供方法的prop 提高渲染效率 行为具有相关性 可以使用带有Render Prop的常规组件来实现大多数的HOC。 render可以换个名字
 <Mouse render={mouse => (
   <p>The mouse position is {mouse.x}, {mouse.y}</p>
@@ -451,67 +492,382 @@ this.props.render(this.state) 并不是在组件中修改了props，而是将参
 
 注意在React.PureComponent中使用Render Props要小心
 使用Render Prop会抵消使用React.PureComponent带来的优势如果在render()中创建方法。这是因为对于新的prop，浅prop比较总是返回false，并且在这种情况下，每次渲染都会为Render Prop生成一个新的值。  这时可以将render prop定义为一个实例方法 提出到render()之外
-React 16.8 新增hook让您不用编写类就可以使用state和其他React特性。
-为什么会出现钩子hook？
-1. 很难在组件之间重用有状态逻辑：React没有提供将可重用行为添加到组件的方法
-可以通过render props 和HOC尝试解决这个问题，但这要求重构代码。你可能会发现组件的“包装地狱”，由提供者providers、使用者,consumers、高阶组件HOC、渲染道具render props和其他抽象层包围。所以React需要一个更好的原语来共享有状态逻辑。通过使用钩子，可以从组件中提取有状态逻辑，以便能够独立地测试和重用它。
-2. 复杂的组件变得难以理解：
-3. 类混淆了人和机器：除了使代码重用和代码组织更加困难之外，我们还发现类是学习React的一大障碍。
-您必须了解this在JavaScript中是如何工作的，这与在大多数语言中是非常不同的。人们可以很好地理解道具、状态和自顶向下的数据流，但仍然很难理解类。类不能很好地缩小，它们使得热重新加载不稳定且不可靠。
-从概念上讲，React组件总是更接近函数。
 
-什么是钩子
-钩子是一种功能，它可以让你从功能组件“钩入”React状态和生命周期特性。
-什么是钩子?钩子是一种特殊的函数，可以让您“钩入”React特性。例如，useState是一个钩子，它允许您向功能组件添加反应状态。
-我什么时候用鱼钩?如果您编写了一个函数组件，并且意识到需要向其添加一些状态，那么以前您必须将其转换为一个类。现在您可以在现有的函数组件中使用一个钩子。
-React提供了一些内置的钩子，比如useState。您还可以创建自己的钩子来重用不同组件之间的有状态行为。
+
+
+Hooks
+React 16.8 新增hook让您不用编写类就可以使用state和其他React特性。
+import React, { useState } from 'react';
+
+function Example() {
+  // Declare a new state variable, which we'll call "count"
+  const [count, setCount] = useState(0);
+
+  return (
+    <div>
+      <p>You clicked {count} times</p>
+      <button onClick={() => setCount(count + 1)}>
+        Click me
+      </button>
+    </div>
+  );
+}
+
+hooks是完全可选的。您可以在几个组件中尝试挂钩，而无需重写任何现有代码。或者不使用它。
+hooks不包含任何破坏更改，100%的向后兼容。
+hooks不能取代你对React概念的认识。相反，它为React概念(道具、状态、上下文、引用和生命周期)提供了更直接的API。hook还提供了一种新的强大的方式来组合它们。
+
+
+什么是Hooks？ 
+Hooks是一种特殊的函数，它可以让你从函数组件“钩入”React状态和生命周期特性。例如，useState是一个Hooks，它允许您向功能组件添加状态。Hooks不能在类内部工作。但是您可以使用它们来代替编写类。
+
+我什么时候用Hooks?如果您编写了一个函数组件，并且意识到需要向其添加一些状态，那么以前您必须将其转换为一个类。现在您可以在现有的函数组件中使用一个Hooks。
+React提供了一些内置的Hooks，比如useState。您还可以创建自己的Hooks来重用不同组件之间的有状态行为。
+
+为什么会出现Hookshook？
+1. 很难在组件之间重用有状态逻辑：React没有提供将可重用行为添加到组件的方法
+可以通过render props 和HOC尝试解决这个问题，但这要求重构代码。你可能会发现组件的“包装地狱”，由提供者providers、使用者,consumers、高阶组件HOC、渲染propsrender props和其他抽象层包围。
+所以React需要一个更好的原语来共享有状态逻辑。通过使用Hooks，可以从组件中提取有状态逻辑，以便能够独立地测试和重用它。
+2. 复杂的组件变得难以理解：我们经常不得不维护一些组件，这些组件一开始很简单，但后来发展成一团混乱的有状态逻辑和副作用。每个生命周期方法通常都包含一些不相关的逻辑。这很容易引入错误和不一致。
+在许多情况下，不可能将这些组件分解成更小的组件，因为到处都是有状态逻辑。测试它们也很困难。这也是许多人喜欢将React与单独的状态管理库结合使用的原因之一。然而，这通常会引入太多的抽象，要求您在不同的文件之间跳转，并使重用组件变得更加困难。
+为了解决这个问题，Hooks允许您根据相关的部分(如设置订阅或获取数据)将一个组件拆分为更小的函数，而不是根据生命周期方法强制拆分。您还可以选择使用reducer来管理组件的本地状态，以使其更可预测。
+3. 类让人和机器困惑：除了使代码重用和代码组织更加困难之外，我们还发现类是学习React的一大障碍。
+您必须了解this在JavaScript中是如何工作的，这与在大多数语言中是非常不同的。人们可以很好地理解props、状态和自顶向下的数据流，但仍然很难理解类。类不能很好地缩小，它们使得热重新加载不稳定且不可靠。
+为了解决这些问题，Hooks允许你在不使用类的情况下使用更多React的特性。从概念上讲，React组件一直更接近于函数。Hooks拥抱了函数，但没有牺牲React的实用精神。Hooks提供了对命令式出口的访问，并且不需要您学习复杂的函数式或响应式编程技术。
+
 
 State Hook
-React提供的一个名为useState的钩子。有时我们也称它为"状态挂钩"它允许我们添加本地状态来响应函数组件，你可以在单个组件中多次使用状态挂钩
+React提供的一个名为useState的Hook。我们在函数组件中调用它添加一些状态。
+import React, { useState } from 'react';
+function Example() {
+  // Declare a new state variable, which we'll call "count"
+  const [count, setCount] = useState(0);
 
-Effect Hook
-效果钩子让你在功能组件中执行副作用(或 “效果”)，在React组件中获取数据、设置订阅和手动更改DOM都是副作用的例子。调用useEffect时，您是在告诉React在刷新DOM的更改后运行“effect”函数。默认情况下，React会在每次渲染之后运行“effect”——包括第一次渲染。
-钩子允许您根据相关的部分(如添加和删除订阅)来组织组件中的副作用，而不是强制基于生命周期方法进行拆分，它允许您在组件中执行副作用，并且类似于类中的生命周期方法
-如果您熟悉React类生命周期方法，您可以将useEffect钩子看作是componentDidMount、componentDidUpdate和componentWillUnmount的组合。
-React组件有两种常见的副作用:不需要清理的副作用和需要清理的副作用。
-有时，我们希望在React更新了DOM之后运行一些额外的代码。网络请求、手工DOM突变和日志记录是不需要清理的常见效果示例。
-在React类组件中，render方法本身不应该造成副作用。因为这里还为时过早——我们通常希望在React更新了DOM之后再执行效果。这就是为什么在React类中，我们将副作用放到componentDidMount和componentDidUpdate中。请注意，我们必须在类中的这两个生命周期方法之间复制代码。
-这是因为在许多情况下，我们希望执行相同的副作用，而不管组件是刚刚挂载还是已经更新。从概念上讲，我们希望它在每次呈现之后发生——但是React类组件没有这样的方法。我们可以提取一个单独的方法，但是我们仍然必须在两个地方调用它。
-Effect Hook是做什么的?通过使用这个钩子，你告诉React你的组件需要在渲染之后做一些事情。React将记住您传递的函数(我们将把它称为“效果”)，并在执行DOM更新之后调用它。
-为什么在组件内部调用useEffect ?将useEffect放在组件中，我们可以直接从该效果访问状态变量(或任何prop)。我们不需要一个特殊的API来读取它——它已经在函数作用域中了。钩子包含了JavaScript闭包，并避免引入JavaScript已经提供解决方案的React-specific APIs。
-是否每次渲染后都会运行useEffect ?是的!默认情况下，它在第一次渲染和每次更新之后运行。
-与componentDidMount或componentDidUpdate不同，使用useEffect计划的效果不会阻止浏览器更新屏幕。这让你的应用程序感觉响应更快。大多数效果不需要同步发生。在不常见的情况下(比如测量布局)，有一个单独的useLayoutEffect钩子，其API与useEffect相同。
-
-钩子是JavaScript函数，但是它们附加了两个规则：
-只在顶层调用钩子。不要在循环、条件或嵌套函数内部调用钩子。
-只从React函数组件调用钩子。不要从常规JavaScript函数中调用钩子。
-
-建立自己的钩子
-有时，我们希望在组件之间重用一些有状态逻辑。传统上，这个问题有两种流行的解决方案:高阶组件和渲染道具。自定义钩子允许您这样做。钩子是重用有状态逻辑的一种方式，而不是状态本身。实际上，对钩子的每个调用都有一个完全隔离的状态——所以您甚至可以在一个组件中两次使用同一个自定义钩子。
-如果一个函数的名字以“use”开头，并且它调用了其他钩子，我们称它为自定义钩子。useSomething命名约定是我们的linter插件能够使用钩子发现代码中的bug的方式。
-
-还有一些不太常用的内置钩子，您可能会发现它们很有用。例如，useContext允许您订阅React上下文而不引入嵌套:
-
-useReducer可以通过一个reducer管理复杂组件的本地状态:
-
-钩子不能在类内部工作。但是您可以使用它们来代替编写类。
-
-调用useState是做什么的?它声明一个“状态变量”。 通常，当函数退出时，变量“消失”，但状态变量被React保留。
-我们传递给useState的参数是什么?useState()钩子的唯一参数是初始状态。与类不同，状态不必是一个对象。如果我们想在状态中存储两个不同的值，我们将调用两次useState()。
+  return (
+    <div>
+      <p>You clicked {count} times</p>
+      <button onClick={() => setCount(count + 1)}>
+        Click me
+      </button>
+    </div>
+  );
+}
+useState的唯一参数是初始状态。在上面的例子中，它是0，因为我们的计数器从0开始。注意，与this.state不同，这里的状态不一定是一个对象。初始状态参数只在第一次呈现时使用。
+useState有一对返回值:当前状态值和一个允许您更新它的函数。您可以从事件处理程序或其他地方调用此函数。它和类中的this.setState，但它不合并旧状态和新状态而是直接覆盖。
+你可以在单个组件中多次使用useState。
+function ExampleWithManyStates() {
+  // Declare multiple state variables!
+  const [age, setAge] = useState(42);
+  const [fruit, setFruit] = useState('banana');
+  const [todos, setTodos] = useState([{ text: 'Learn Hooks' }]);
+  // ...
+}
+方括号是什么意思?
+你可能已经注意到方括号，这种JavaScript语法称为“数组解构”。
+比如const [fruit, setFruit] = useState('banana');
+这意味着我们创建了两个新变量fruit和setFruit，其中fruit被设置为useState返回的第一个值，setFruit是第二个。你也可以这样写，但使用[0]和[1]来访问有点令人困惑：
+var fruitStateVariable = useState('banana'); // Returns a pair
+var fruit = fruitStateVariable[0]; // First item in a pair
+var setFruit = fruitStateVariable[1]; // Second item in a pair
+调用useState时做了什么?它声明一个“状态变量”。 通常，当函数退出时，变量“消失”，但状态变量被React保留。
+把什么作为参数传递给useState?useState()Hook的唯一参数是初始状态。与类不同，这里的状态不必是一个对象。如果我们想在状态中存储两个不同的值，我们将调用两次useState()。
 useState返回什么?它返回两个值:当前状态和一个更新状态的函数。
 
 你可能想知道:为什么useState不命名为createState ?
 “Create”不是很准确，因为状态只在第一次渲染时创建。在接下来的渲染中，useState会给我们当前状态。
 
 读状态和更新状态在类组件和函数组件中的区别
+<p>You clicked {this.state.count} times</p>
+<p>You clicked {count} times</p>
 
-方括号是什么意思?
-当我们声明一个状态变量时，你可能已经注意到方括号: const [fruit, setFruit] = useState('banana');
-这种JavaScript语法称为“数组解构”。这意味着我们创建了两个新变量fruit和setFruit，其中fruit被设置为useState返回的第一个值，setFruit是第二个。
+<button onClick={() => this.setState({ count: this.state.count + 1 })}>
+  Click me
+</button>
+<button onClick={() => setCount(count + 1)}>
+  Click me
+</button>
 
-function radioChangeHandler(event: React.ChangeEvent<HTMLInputElement>){
-    let value = (event.target as HTMLInputElement).value;
-    switch ((event.target as HTMLInputElement).name) {
-      case "IFRadio":
 
+
+Effect Hook
+您可能已经执行过数据获取、订阅或从React组件手动更改DOM。我们称这些操作为“副作用”(或简称为“效果”)，因为它们会影响其他组件，在呈现过程中不能执行。
+效果挂钩useEffect添加了从函数组件执行副作用的能力。它的作用与React类中的componentDidMount、componentDidUpdate和componentWillUnmount相同，但被统一到一个API中。
+import React, { useState, useEffect } from 'react';
+
+function Example() {
+  const [count, setCount] = useState(0);
+
+  // Similar to componentDidMount and componentDidUpdate:
+  useEffect(() => {
+    // Update the document title using the browser API
+    document.title = `You clicked ${count} times`;
+  });
+
+  return (
+    <div>
+      <p>You clicked {count} times</p>
+      <button onClick={() => setCount(count + 1)}>
+        Click me
+      </button>
+    </div>
+  );
+}
+当您调用useEffect时，您是在告诉React在刷新DOM更改后运行“effect”函数。效果是在组件内部声明的，因此它们可以访问组件的道具和状态。默认情况下，React会在每次渲染后运行效果——包括第一次渲染。
+效果还可以通过返回一个函数来指定如何在它们之后进行“清理”。例如，这个组件使用一种效果来订阅一个朋友的在线状态，然后通过取消订阅来清除:
+
+import React, { useState, useEffect } from 'react';
+
+function FriendStatus(props) {
+  const [isOnline, setIsOnline] = useState(null);
+
+  function handleStatusChange(status) {
+    setIsOnline(status.isOnline);
+  }
+
+  useEffect(() => {
+    ChatAPI.subscribeToFriendStatus(props.friend.id, handleStatusChange);
+    return () => {
+      ChatAPI.unsubscribeFromFriendStatus(props.friend.id, handleStatusChange);
+    };
+  });
+
+  if (isOnline === null) {
+    return 'Loading...';
+  }
+  return isOnline ? 'Online' : 'Offline';
+}
+在这个例子中，当组件卸载时，React将取消订阅我们的ChatAPI，以及由于后续渲染而重新运行效果之前。如果我们传递给ChatAPI的props.friend.id没有改变，你希望告诉React跳过重新订阅，那么将一个数组作为第二个可选参数传递给useEffect:
+useEffect(() => {
+  ...
+}, [props.friend.id]); // Only re-run the effect if props.friend.id changes
+就像useState一样，你可以在一个组件中使用多个效果:
+function FriendStatusWithCounter(props) {
+  const [count, setCount] = useState(0);
+  useEffect(() => {
+    document.title = `You clicked ${count} times`;
+  });
+
+  const [isOnline, setIsOnline] = useState(null);
+  useEffect(() => {
+    ChatAPI.subscribeToFriendStatus(props.friend.id, handleStatusChange);
+    return () => {
+      ChatAPI.unsubscribeFromFriendStatus(props.friend.id, handleStatusChange);
+    };
+  });
+
+  function handleStatusChange(status) {
+    setIsOnline(status.isOnline);
+  }
+  // ...
+Effect Hook允许您根据组件中相关的部分(比如添加和删除订阅)来组织副作用，而不是根据生命周期方法强制进行分割。
+
+
+
+Effect Hook让你在函数组件中执行副作用(或 “效果”)，在React组件中获取数据、设置订阅和手动更改DOM都是副作用的例子。调用useEffect时，您是在告诉React在刷新DOM的更改后运行“effect”函数。默认情况下，React会在每次渲染之后运行“effect”——包括第一次渲染。
+Hooks允许您根据相关的部分(如添加和删除订阅)来组织组件中的副作用，而不是强制基于生命周期方法进行拆分，它允许您在组件中执行副作用，并且类似于类中的生命周期方法
+如果您熟悉React类生命周期方法，您可以将useEffectHooks看作是componentDidMount、componentDidUpdate和componentWillUnmount的组合。
+React组件有两种常见的副作用:不需要清理的副作用和需要清理的副作用。
+有时，我们希望在React更新了DOM之后运行一些额外的代码。网络请求、手动DOM突变和日志记录是不需要清理的常见效果示例。
+在React类组件中，render方法本身不应该造成副作用。因为这里还为时过早——我们通常希望在React更新了DOM之后再执行效果。这就是为什么在React类中，我们将副作用放到componentDidMount和componentDidUpdate中。请注意，我们必须在类中的这两个生命周期方法之间复制代码。忘记正确处理componentDidUpdate是React应用程序常见的bug来源。可能导致内存泄漏或崩溃。
+这是因为在许多情况下，我们希望执行相同的副作用，而不管组件是刚刚挂载还是之后已经完成更新。从概念上讲，我们希望它在每次呈现之后发生——但是React类组件没有这样的方法。
+Effect Hook是做什么的?通过使用这个Hooks，你告诉React你的组件需要在渲染之后做一些事情。React将记住您传递的函数(我们将把它称为“效果”)，并在执行DOM更新之后调用它。useEffect在默认情况下处理它们。在应用下一个效果之前，它会清除之前的效果。我们将一个函数传递给useEffect钩子。我们传递的这个函数就是我们的效果。
+为什么在组件内部调用useEffect ?将useEffect放在组件中，我们可以直接从该效果访问状态变量(或任何prop)。我们不需要一个特殊的API来读取它——它已经在函数作用域中了。Hooks包含了JavaScript闭包，并避免引入JavaScript已经提供解决方案的React-specific APIs。
+是否每次渲染后都会运行useEffect ?是的!默认情况下，它在第一次渲染和每次更新之后运行。这种行为在默认情况下确保了一致性，并防止了由于缺少更新逻辑而在类组件中常见的bug。
+与componentDidMount或componentDidUpdate不同，使用useEffect的效果不会阻止浏览器更新屏幕。这让你的应用程序感觉响应更快。大多数效果不需要同步发生。在不常见的情况下(比如测量布局)，有一个单独的useLayoutEffectHooks，其API与useEffect相同。
+
+对比类与Hooks不需要任何清理的副作用。
+class Example extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      count: 0
+    };
+  }
+
+  componentDidMount() {
+    document.title = `You clicked ${this.state.count} times`;
+  }
+  componentDidUpdate() {
+    document.title = `You clicked ${this.state.count} times`;
+  }
+
+  render() {
+    return (
+      <div>
+        <p>You clicked {this.state.count} times</p>
+        <button onClick={() => this.setState({ count: this.state.count + 1 })}>
+          Click me
+        </button>
+      </div>
+    );
+  }
+}
+
+
+import React, { useState, useEffect } from 'react';
+
+function Example() {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    document.title = `You clicked ${count} times`;
+  });
+
+  return (
+    <div>
+      <p>You clicked {count} times</p>
+      <button onClick={() => setCount(count + 1)}>
+        Click me
+      </button>
+    </div>
+  );
+}
+
+对比类与Hooks需要任何清理的副作用。
+
+在React类中，你通常会在componentDidMount中设置订阅，然后在componentWillUnmount中清除订阅。
+
+class FriendStatus extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { isOnline: null };
+    this.handleStatusChange = this.handleStatusChange.bind(this);
+  }
+
+  componentDidMount() {
+    ChatAPI.subscribeToFriendStatus(
+      this.props.friend.id,
+      this.handleStatusChange
+    );
+  }
+  componentWillUnmount() {
+    ChatAPI.unsubscribeFromFriendStatus(
+      this.props.friend.id,
+      this.handleStatusChange
+    );
+  }
+  handleStatusChange(status) {
+    this.setState({
+      isOnline: status.isOnline
+    });
+  }
+
+  render() {
+    if (this.state.isOnline === null) {
+      return 'Loading...';
+    }
+    return this.state.isOnline ? 'Online' : 'Offline';
+  }
+}
+注意componentDidMount和componentWillUnmount是如何相互镜像的。生命周期方法迫使我们分割这个逻辑，即使它们中的代码在概念上与相同的效果相关。相比之下useEffect被设计成将其保持在一起。如果你的效果返回一个函数，React会在清理时运行它:
+
+import React, { useState, useEffect } from 'react';
+
+function FriendStatus(props) {
+  const [isOnline, setIsOnline] = useState(null);
+
+  useEffect(() => {
+    function handleStatusChange(status) {
+      setIsOnline(status.isOnline);
+    }
+    ChatAPI.subscribeToFriendStatus(props.friend.id, handleStatusChange);
+    // Specify how to clean up after this effect:
+    return function cleanup() {
+      ChatAPI.unsubscribeFromFriendStatus(props.friend.id, handleStatusChange);
+    };
+  });
+
+  if (isOnline === null) {
+    return 'Loading...';
+  }
+  return isOnline ? 'Online' : 'Offline';
+}
+我们不必从效果中返回一个命名函数。我们在这里称它为cleanup，以阐明它的目的，但你可以返回一个箭头函数或其他名称。
+为什么我们从我们的效果返回一个函数?这是可选的效果清理机制。每个效果都可以返回一个在它之后进行清理的函数。这让我们可以将相关的逻辑保持在彼此接近的位置。
+React到底什么时候执行清理?React在组件卸载时执行清理。然而，正如我们之前学到的，效果会在每次渲染时运行，而不仅仅是一次。这就是为什么React也会在下次运行效果之前清除之前渲染的效果。这样做有助于避免错误，但在某些情况下，每次渲染后清理或应用效果可能会产生性能问题。在类组件中，我们可以通过在componentDidUpdate中额外写一个与prevProps或prevState的比较来解决这个问题: 
+componentDidUpdate(prevProps, prevState) {
+  if (prevState.count !== this.state.count) {
+    document.title = `You clicked ${this.state.count} times`;
+  }
+}
+这个要求非常普遍，因此它被内置到useEffect钩子API中。如果在重新渲染之间某些值没有改变，你可以告诉React跳过应用效果。为此，将一个数组作为第二个可选参数传递给useEffect:
+useEffect(() => {
+  document.title = `You clicked ${count} times`;
+}, [count]); // Only re-run the effect if count changes
+如果数组中有多个项目，即使其中一个项目不同，React也会重新运行效果。
+这也适用于有清理阶段的效果:
+useEffect(() => {
+  function handleStatusChange(status) {
+    setIsOnline(status.isOnline);
+  }
+
+  ChatAPI.subscribeToFriendStatus(props.friend.id, handleStatusChange);
+  return () => {
+    ChatAPI.unsubscribeFromFriendStatus(props.friend.id, handleStatusChange);
+  };
+}, [props.friend.id]); // Only re-subscribe if props.friend.id changes
+将来，第二个参数可能会通过构建时转换自动添加。
+
+如果您想运行一个效果并只清除一次(在挂载和卸载时)，可以传递一个空数组([])作为第二个参数。这告诉React你的效果不依赖于任何道具或状态的值，所以它永远不需要重新运行。
+
+我们也开始看到钩子如何解决动机中列出的问题。我们已经看到了效果清理如何避免componentDidUpdate和componentWillUnmount中的重复，使相关代码更加紧密，并帮助我们避免bug。我们还看到了如何根据效果的目的来区分效果，这是我们在类中根本做不到的。
+
+
+
+Hooks是JavaScript函数，但是它们附加了两个规则：
+不要在循环、条件或嵌套函数内部调用钩子。相反，总是在React函数的顶层使用钩子。如果想要有条件地运行一个effect，可以将该条件放在钩子中。
+不要从常规JavaScript函数中调用Hooks。相反，总是在React函数组件中调用钩子。或从自定义钩子调用钩子。
+
+
+
+
+自定义Hooks
+有时，我们希望在组件之间重用一些有状态逻辑。传统上，这个问题有两种流行的解决方案:HOC件和render props。自定义Hooks允许您这样做，但不需要向树中添加更多组件。
+前面，我们介绍了一个FriendStatus组件，它调用useState和useEffect钩子来订阅朋友的在线状态。假设我们还想在另一个组件中重用这个订阅逻辑。我们可以将这个逻辑提取到一个名为useFriendStatus的自定义钩子中:
+import React, { useState, useEffect } from 'react';
+
+function useFriendStatus(friendID) {
+  const [isOnline, setIsOnline] = useState(null);
+
+  function handleStatusChange(status) {
+    setIsOnline(status.isOnline);
+  }
+
+  useEffect(() => {
+    ChatAPI.subscribeToFriendStatus(friendID, handleStatusChange);
+    return () => {
+      ChatAPI.unsubscribeFromFriendStatus(friendID, handleStatusChange);
+    };
+  });
+
+  return isOnline;
+}
+useFriendStatus它接受friendID作为参数，并返回我们的朋友是否在线。
+我们可以在不同组件中重用这段状态逻辑：
+function FriendStatus(props) {
+  const isOnline = useFriendStatus(props.friend.id);
+
+  if (isOnline === null) {
+    return 'Loading...';
+  }
+  return isOnline ? 'Online' : 'Offline';
+}
+function FriendListItem(props) {
+  const isOnline = useFriendStatus(props.friend.id);
+
+  return (
+    <li style={{ color: isOnline ? 'green' : 'black' }}>
+      {props.friend.name}
+    </li>
+  );
+
+Hooks是重用有状态逻辑的一种方式，而不是状态本身。实际上，对Hooks的每个调用都有一个完全隔离的状态——所以您甚至可以在一个组件中两次使用同一个自定义Hooks。
+自定义钩子更像是一种约定，而不是一种特性。如果一个函数的名字以“use”开头，并且它调用了其他Hooks，我们称它为自定义Hooks。
+
+还有一些不太常用的内置Hooks，您可能会发现它们很有用。例如，useContext允许您订阅React上下文而不引入嵌套:
+useReducer可以通过一个reducer管理复杂组件的本地状态
+构建自己的钩子可以将组件逻辑提取到可重用的函数中。
+当我们想要在两个JavaScript函数之间共享逻辑时，我们将其提取到第三个函数中。组件和钩子都是函数，所以这也适用于它们!
+自定义钩子是一个JavaScript函数，它的名字以“use”开头，可以调用其他钩子。就像在组件中一样，确保只在自定义钩子的顶层调用其他钩子。
+两个组件使用相同的钩子共享状态吗?不。自定义钩子是一种重用有状态逻辑的机制，但每次使用自定义钩子时，它内部的所有状态和效果都是完全隔离的。
 

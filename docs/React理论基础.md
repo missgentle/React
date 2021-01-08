@@ -553,7 +553,7 @@ function Example() {
   );
 }
 useState的唯一参数是初始状态。在上面的例子中，它是0，因为我们的计数器从0开始。注意，与this.state不同，这里的状态不一定是一个对象。初始状态参数只在第一次呈现时使用。
-useState有一对返回值:当前状态值和一个允许您更新它的函数。您可以从事件处理程序或其他地方调用此函数。它和类中的this.setState，但它不合并旧状态和新状态而是直接覆盖。
+useState有一对返回值:当前状态值和一个允许您更新它的函数。您可以从事件处理程序或其他地方调用此函数。它和类中的this.setState类似，但它不合并旧状态和新状态而是直接覆盖。
 你可以在单个组件中多次使用useState。
 function ExampleWithManyStates() {
   // Declare multiple state variables!
@@ -578,11 +578,13 @@ useState返回什么?它返回两个值:当前状态和一个更新状态的函�
 
 读状态和更新状态在类组件和函数组件中的区别
 <p>You clicked {this.state.count} times</p>
+vs
 <p>You clicked {count} times</p>
 
 <button onClick={() => this.setState({ count: this.state.count + 1 })}>
   Click me
 </button>
+vs
 <button onClick={() => setCount(count + 1)}>
   Click me
 </button>
@@ -661,8 +663,6 @@ function FriendStatusWithCounter(props) {
   // ...
 Effect Hook允许您根据组件中相关的部分(比如添加和删除订阅)来组织副作用，而不是根据生命周期方法强制进行分割。
 
-
-
 Effect Hook让你在函数组件中执行副作用(或 “效果”)，在React组件中获取数据、设置订阅和手动更改DOM都是副作用的例子。调用useEffect时，您是在告诉React在刷新DOM的更改后运行“effect”函数。默认情况下，React会在每次渲染之后运行“effect”——包括第一次渲染。
 Hooks允许您根据相关的部分(如添加和删除订阅)来组织组件中的副作用，而不是强制基于生命周期方法进行拆分，它允许您在组件中执行副作用，并且类似于类中的生命周期方法
 如果您熟悉React类生命周期方法，您可以将useEffectHooks看作是componentDidMount、componentDidUpdate和componentWillUnmount的组合。
@@ -670,12 +670,12 @@ React组件有两种常见的副作用:不需要清理的副作用和需要清�
 有时，我们希望在React更新了DOM之后运行一些额外的代码。网络请求、手动DOM突变和日志记录是不需要清理的常见效果示例。
 在React类组件中，render方法本身不应该造成副作用。因为这里还为时过早——我们通常希望在React更新了DOM之后再执行效果。这就是为什么在React类中，我们将副作用放到componentDidMount和componentDidUpdate中。请注意，我们必须在类中的这两个生命周期方法之间复制代码。忘记正确处理componentDidUpdate是React应用程序常见的bug来源。可能导致内存泄漏或崩溃。
 这是因为在许多情况下，我们希望执行相同的副作用，而不管组件是刚刚挂载还是之后已经完成更新。从概念上讲，我们希望它在每次呈现之后发生——但是React类组件没有这样的方法。
-Effect Hook是做什么的?通过使用这个Hooks，你告诉React你的组件需要在渲染之后做一些事情。React将记住您传递的函数(我们将把它称为“效果”)，并在执行DOM更新之后调用它。useEffect在默认情况下处理它们。在应用下一个效果之前，它会清除之前的效果。我们将一个函数传递给useEffect钩子。我们传递的这个函数就是我们的效果。
+Effect Hook是做什么的?通过使用这个Hooks，你告诉React你的组件需要在渲染之后做一些事情。React将记住您传递的函数(我们将把它称为“效果”或副作用)，并在执行DOM更新之后调用它。useEffect在默认情况下处理它们。在应用下一个效果之前，它会清除之前的效果。
 为什么在组件内部调用useEffect ?将useEffect放在组件中，我们可以直接从该效果访问状态变量(或任何prop)。我们不需要一个特殊的API来读取它——它已经在函数作用域中了。Hooks包含了JavaScript闭包，并避免引入JavaScript已经提供解决方案的React-specific APIs。
 是否每次渲染后都会运行useEffect ?是的!默认情况下，它在第一次渲染和每次更新之后运行。这种行为在默认情况下确保了一致性，并防止了由于缺少更新逻辑而在类组件中常见的bug。
 与componentDidMount或componentDidUpdate不同，使用useEffect的效果不会阻止浏览器更新屏幕。这让你的应用程序感觉响应更快。大多数效果不需要同步发生。在不常见的情况下(比如测量布局)，有一个单独的useLayoutEffectHooks，其API与useEffect相同。
 
-对比类与Hooks不需要任何清理的副作用。
+对比类与Hooks不需要清理的副作用。
 class Example extends React.Component {
   constructor(props) {
     super(props);
@@ -723,7 +723,7 @@ function Example() {
   );
 }
 
-对比类与Hooks需要任何清理的副作用。
+对比类与Hooks需要清理的副作用。
 
 在React类中，你通常会在componentDidMount中设置订阅，然后在componentWillUnmount中清除订阅。
 
@@ -759,31 +759,8 @@ class FriendStatus extends React.Component {
     return this.state.isOnline ? 'Online' : 'Offline';
   }
 }
-注意componentDidMount和componentWillUnmount是如何相互镜像的。生命周期方法迫使我们分割这个逻辑，即使它们中的代码在概念上与相同的效果相关。相比之下useEffect被设计成将其保持在一起。如果你的效果返回一个函数，React会在清理时运行它:
-
-import React, { useState, useEffect } from 'react';
-
-function FriendStatus(props) {
-  const [isOnline, setIsOnline] = useState(null);
-
-  useEffect(() => {
-    function handleStatusChange(status) {
-      setIsOnline(status.isOnline);
-    }
-    ChatAPI.subscribeToFriendStatus(props.friend.id, handleStatusChange);
-    // Specify how to clean up after this effect:
-    return function cleanup() {
-      ChatAPI.unsubscribeFromFriendStatus(props.friend.id, handleStatusChange);
-    };
-  });
-
-  if (isOnline === null) {
-    return 'Loading...';
-  }
-  return isOnline ? 'Online' : 'Offline';
-}
-我们不必从效果中返回一个命名函数。我们在这里称它为cleanup，以阐明它的目的，但你可以返回一个箭头函数或其他名称。
-为什么我们从我们的效果返回一个函数?这是可选的效果清理机制。每个效果都可以返回一个在它之后进行清理的函数。这让我们可以将相关的逻辑保持在彼此接近的位置。
+注意componentDidMount和componentWillUnmount是如何相互镜像的。生命周期方法迫使我们分割这个逻辑，即使它们中的代码在概念上与相同的效果相关。相比之下useEffect被设计成将其保持在一起。
+为什么我们从效果返回一个函数?这是可选的效果清理机制。每个效果都可以返回一个在它之后进行清理的函数。这让我们可以将相关的逻辑保持在彼此接近的位置。
 React到底什么时候执行清理?React在组件卸载时执行清理。然而，正如我们之前学到的，效果会在每次渲染时运行，而不仅仅是一次。这就是为什么React也会在下次运行效果之前清除之前渲染的效果。这样做有助于避免错误，但在某些情况下，每次渲染后清理或应用效果可能会产生性能问题。在类组件中，我们可以通过在componentDidUpdate中额外写一个与prevProps或prevState的比较来解决这个问题: 
 componentDidUpdate(prevProps, prevState) {
   if (prevState.count !== this.state.count) {

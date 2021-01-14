@@ -1,5 +1,4 @@
 React理论基础
-
 Chrome-React调试插件https://www.cnblogs.com/shenwh/p/12067029.html
 Sublime-React格式化 https://blog.csdn.net/HuangLin_Developer/article/details/89394949
 React 是什么？
@@ -11,7 +10,6 @@ React 是一个声明式，高效且灵活的用于构建用户界面的 JavaScr
 每一个 React 元素事实上都是一个 JavaScript 对象，可以保存在变量中或者作为参数传递。每个组件都是封装好的，并且可以单独运行，这样你就可以通过组合简单的组件来构建复杂的 UI 界面。
 
 React从一开始就被设计为逐渐采用，您可以根据需要使用少量的React向现有页面添加一些“少量的交互性”。
-
 最小的React示例
 ReactDOM.render(  
     <h1>Hello, world!</h1>,
@@ -21,7 +19,6 @@ ReactDOM.render(
 <div id="root"></div>
 我们称它为“根”DOM节点，因为它里面的一切都将由React DOM管理。
 根DOM节点通常只有一个。但如果您正在将React集成到一个现有的应用程序中，您可能会有尽可能多的孤立根DOM节点。要将React元素渲染到根DOM节点，请将两者都传递给ReactDOM.render():
-
 JSX 
 是JavaScript的语法扩展。JSX很像模板语言HTML，但它具有JavaScript的全部功能。在JSX中，可以将任何有效的JavaScript表达式放入花括号中。虽然JSX是完全可选的，但许多人发现它对编写UI代码很有帮助。
 使用JSX指定属性 你可以使用引号来指定字符串文字作为属性
@@ -46,8 +43,6 @@ function getGreeting(user) {
   return <h1>Hello, Stranger.</h1>;
 }
 默认情况下，React DOM在呈现JSX中嵌入的任何值之前都会转义。因此，它确保您永远不能注入任何没有显式地编写在您的应用程序中的东西。所有内容在呈现之前都被转换成字符串。这有助于防止XSS(跨站点脚本攻击)。
-
-
 React元素
 JSX 代码:
 const element = (
@@ -86,8 +81,6 @@ function tick() {
 }
 setInterval(tick, 1000);
 它每秒钟都会从setInterval()回调函数中调用ReactDOM.render()。但实际上，大多数React应用程序只调用ReactDOM.render()一次。
-
-
 React组件
 React接受了呈现逻辑与其他UI逻辑天生耦合的事实。React不是通过将标记和逻辑放在单独的文件中来人为地分离技术，而是用称为“组件”的松散耦合单元分离关注点，这些单元包含了标记和逻辑。
 
@@ -106,7 +99,6 @@ class Welcome extends React.Component {
   }
 }
 如果你想写的组件只包含一个 render 方法，并且不包含 state，那么使用函数组件就会更简单。我们不需要定义一个继承于 React.Component 的类，我们可以定义一个函数，这个函数接收 props 作为参数，然后返回需要渲染的元素。函数组件写起来并不像 类组件那么繁琐，很多组件都可以使用函数组件来写。
-
 props
 当React看到表示用户定义组件的元素时，它将JSX属性和子组件作为单个对象传递给该组件。我们称这个物体为“props”。
 function Welcome(props) {
@@ -121,9 +113,6 @@ props是只读的。无论您将组件声明为函数还是类，它都绝不能
 React非常灵活，但它有一个严格的规则:
 所有React组件就它们的props而言必须像纯函数一样。不试图改变它们的输入，并且对于相同的输入总是返回相同的结果。
 在 JavaScript class 中，每次你定义其子类的构造函数时，都需要调用 super 方法。因此，在所有含有构造函数的的 React 组件中，构造函数必须以 super(props) 开头。
-
-
-
 state
 state允许React组件随时间改变其输出，以响应用户操作、网络响应和其他任何事情。
 state是私有的，完全由组件控制。
@@ -138,8 +127,6 @@ this.setState((state, props) => ({
 }));
 3状态更新是以合并的方式
 当您调用setState()时，React将您提供的对象合并到当前状态。你的状态可能包含几个独立变量:他们相互之间独立分离，同一个变量会被覆盖
-
-
 单向数据流
 在React应用中，组件是有状态还是无状态被认为是组件的实现细节，父组件和子组件都不能知道某个组件是有状态的还是无状态的，它们也不应该关心它是定义为函数还是类。
 这就是为什么状态经常被称为局部的或封装的原因。除了拥有和设置它的组件外，其他组件都不能访问它。
@@ -147,8 +134,6 @@ this.setState((state, props) => ({
 任何状态总是由某些特定的组件拥有，从该状态派生的任何数据或UI只能影响树中它们“下面”的组件。
 如果你把组件树想象成一个props瀑布，那么每个组件的状态就像一个额外的水源，它在任意点与之连接，但也向下流动。
 React的单向数据流(也称为单向绑定)使一切都保持模块化和快速。
-
-
 事件绑定
 使用React元素处理事件与处理DOM元素上的事件非常相似。这里有一些语法差异:
 1React事件使用驼峰大小写命名，而不是小写。
@@ -193,7 +178,6 @@ return的内容用()包裹，防止JavaScript 解析的时在 return 的后面�
 <button onClick={this.deleteRow.bind(this, id)}>Delete Row</button>
 在这两种情况下，表示React事件的e参数将作为ID之后的第二个参数传递。
 对于箭头函数，我们必须显式传递它，但对于bind，任何进一步的参数都会自动转发。
-
 条件渲染
 虽然声明一个变量并使用if语句是有条件地呈现组件的好方法，但有时您可能希望使用更短的语法。有几种方法可以在JSX中内联条件，可以通过用花括号将表达式包装起来，将表达式嵌入到JSX中。这包括JavaScript的逻辑&&操作符。对于有条件地包含元素，它可以很方便。
 它能起作用是因为在JavaScript中，true && expression总是计算为expression, false && expression总是计算为false。因此，如果条件为真，那么&&之后的元素将出现在输出中。如果它是假的，React会忽略并跳过它。
@@ -272,7 +256,6 @@ ReactDOM.render(
   <Page />,
   document.getElementById('root')
 );
-
 列表元素的key
 key是创建元素列表时需要包含的特殊字符串属性，它是 React 中一个特殊的保留属性（还有一个是 ref，拥有更高级的特性）。当 React 元素被创建出来的时候，React 会提取出 key 属性，然后把 key 直接存储在返回的元素上。 key帮助React识别哪些项目被更改、添加或删除来自动判断哪些组件需要更新。有利于在列表头部插入新节点时提高效率。选择key的最佳方法是使用在其兄弟列表中唯一标识列表项的字符串。大多数情况下，你会使用数据中的id作为key。当你没有稳定的id渲染项目，你可以使用项目索引，如果项目的顺序可能会改变，我们不建议使用索引。这可能会对性能产生负面影响，并可能导致组件状态出现问题。如果你没有指定任何 key，React 会发出警告，并且会把索引当作默认的 key。显式地使用 key={i} 来指定 key 确实会消除警告，但是如果想要对列表进行重新排序、新增、删除操作时，把数组索引作为 key 依然是有问题的。所以大多数情况下最好不要这么做。组件不能访问到它的 key 。同时key也不会传递即子组件无法通过props.key访问到，虽然 key 看起来好像是 props 中的一个，当需要使用key值时要单独传递新属性。
 
@@ -294,8 +277,6 @@ function NumberList(props) {
     </ul>
   );
 }
-
-
 状态提升
 在React中，共享状态是通过将其移动到需要它的组件的最近的公共祖先来实现的。这被称为“状态提升”。 
 通常，状态首先被添加到需要它来呈现的组件中。然后，如果其他组件也需要它，您可以将它提升到它们最近的共同祖先。您应该依赖自顶向下的数据流，而不是尝试在不同组件之间同步状态。
@@ -304,8 +285,6 @@ function NumberList(props) {
 我们知道props是只读的。当state 提升到父组件时，就不可以调用this.setState()来更改它了。
 在React中，这通常是通过让组件“受控”来解决的。
 “受控组件” 对于受控组件，输入值总是由React state驱动。
-
-
 React思维
 步骤1:将UI分解为组件层次结构
 单一职责原则，也就是说，一个组件在理想情况下应该只做一件事。如果它最终增长，它应该被分解成更小的子组件。每个组件匹配数据模型的一个部分
@@ -337,8 +316,6 @@ React思维
 不可变性使得跟踪数据变化更容易。如果发现对象变成了一个新对象，那么我们就知道对象发生了改变。而不需要将整个对象树遍历一次。
 
 不可变性最主要的优势在于它可以帮助我们在 React 中创建 pure components。我们可以由此确定组件重新渲染的时机。
-
-
 懒加载lazy
 React.lazy函数允许将动态导入呈现为常规组件。
 Before:
@@ -381,15 +358,12 @@ const App = () => (
     </Suspense>
   </Router>
 );
-
-
 上下文context
 提供了一种通过组件树传递数据的方法，而不必在每个级别手动传递props。
 在一个典型的React应用程序中，数据是通过props自顶向下传递的(父元素到子元素)，但是对于应用程序中许多组件都需要的特定类型的props(例如locale preference、UI theme)来说，这可能会很麻烦。Context提供了一种在组件之间共享这些值的方法，而不必在树的每一层都显式地传递一个props。
 当某些数据需要由不同嵌套级别的许多组件访问时，主要使用上下文。谨慎地应用它，因为它使组件重用更加困难。上下文允许您将此类数据及其更改“广播”给下面的所有组件。使用上下文可能比其他方法更简单的常见示例包括管理当前语言环境、主题或数据缓存。
 如果您只是想避免在许多级别传递一些props，那么组件组合通常是比上下文更简单的解决方案。
 将子组件作为props传递，也可用此模式将子节点与其直接父节点解耦
-
 错误边界
 import React, { Suspense } from 'react';
 import MyErrorBoundary from './MyErrorBoundary';
@@ -413,39 +387,27 @@ const MyComponent = () => (
 错误边界只捕获树中它们下面的组件中的错误。错误边界不能捕获自身内部的错误。如果错误边界无法呈现错误消息，则错误将传播到它上面最近的错误边界。这也类似于JavaScript中的catch{}块的工作方式。
 错误边界的粒度由您决定。您可以包装顶级路由组件以向用户显示“出错了”消息，就像服务器端框架经常处理崩溃一样。您还可以将单个小部件包装在一个错误边界中，以保护它们不会崩溃应用程序的其余部分。
 错误边界不捕捉事件处理程序内部的错误。React不需要从事件处理程序中的错误中恢复错误边界。与呈现方法和生命周期方法不同，事件处理程序不会在呈现期间发生。所以如果他们抛出异常了，React仍然知道在屏幕上显示什么。如果你需要捕获事件处理程序内部的错误，使用常规的JavaScript try / catch语句:
-try / catch很棒，但它只适用于命令式代码: 然而，React组件是声明式的，并指定应该呈现的内容:
-
-
+try / catch很棒，但它只适用于命令式代码: 然而，React组件是声明式的，并指定应该呈现的内容
 Forwarding Refs
 一种通过组件自动将Ref传递给其子组件的技术。对于应用程序中的大多数组件来说，这通常是不必要的。但是，它对某些类型的组件很有用，特别是在可重用组件库中。
 Refs提供了一种访问DOM节点或对render方法中创建的元素做出反应的方法。
-在典型的React数据流中，props是父组件与子组件交互的唯一方式。要修改一个孩子，你需要用新的props重新渲染它。但是，在一些情况下，您需要在典型数据流之外强制修改子流。要修改的子元素可以是React组件的实例，也可以是DOM元素。对于这两种情况，React提供了一个逃生口。
-
-这里有一些很好的参考用例:
-	管理焦点、文本选择或媒体播放。
-	触发命令动画。
-	与第三方DOM库集成。
-
-
+在典型的React数据流中，props是父组件与子组件交互的唯一方式。要修改一个孩子，你需要用新的props重新渲染它。但是，在一些情况下，您需要在典型数据流之外强制修改子流。要修改的子元素可以是React组件的实例，也可以是DOM元素。
 Higher-Order Components (HOC)
 一种组合模式 提取出可重用行为减少代码量 一个方法接收组件参数返回新的带有可重用行为的组件 注意静态方法要复制 refs无法重用 如果向HOC添加ref, ref将引用最外层的容器组件，而不是被包装的组件。幸运的是，我们可以使用React.forwardRef API显式地将refs转发到内部组件。
-
 Render Props 
 一个提供方法的prop 提高渲染效率 行为具有相关性 可以使用带有Render Prop的常规组件来实现大多数的HOC。 render可以换个名字
 <Mouse render={mouse => (
   <p>The mouse position is {mouse.x}, {mouse.y}</p>
 )}/>
-
 this.props.render(this.state) 并不是在组件中修改了props，而是将参数传给props.render   
-
 注意在React.PureComponent中使用Render Props要小心
-使用Render Prop会抵消使用React.PureComponent带来的优势如果在render()中创建方法。这是因为对于新的prop，浅prop比较总是返回false，并且在这种情况下，每次渲染都会为Render Prop生成一个新的值。  这时可以将render prop定义为一个实例方法 提出到render()之外
-
+使用Render Prop会抵消使用React.PureComponent带来的优势如果在render()中创建方法。这是因为对于新的prop，浅prop比较总是返回false，并且在这种情况下，每次渲染都会为Render Prop生成一个新的值。  这时可以将render prop定义为一个实例方法提出到render()之外
+ 
 生命周期
 https://projects.wojtekmaj.pl/react-lifecycle-methods-diagram/
-React允许您将组件定义为类或函数。定义为类的组件目前提供更多的特性，在本页中将详细描述。要定义React组件类，你需要扩展React. component
-我们强烈建议不要创建自己的基组件类。在React组件中，代码重用主要是通过组合而不是继承来实现的。
-每个组件都有几个“生命周期方法”，您可以覆盖这些方法，以便在流程中的特定时间运行代码。
+React允许您将组件定义为类或函数。定义为类的组件目前提供更多的特性。
+要定义React组件类，你需要扩展React. component。我们强烈建议不要创建自己的基组件类。在React组件中，代码重用主要是通过组合而不是继承来实现的。
+每个组件都有几个“生命周期方法”，可以覆盖这些方法以便在流程中的特定时间运行代码。
 
 Mounting
 当组件的实例被创建并插入到DOM中时，这些方法会按照以下顺序被调用:
@@ -470,7 +432,6 @@ Error Handling
 当呈现过程中、生命周期方法中或任何子组件的构造函数中出现错误时，将调用这些方法。
 static getDerivedStateFromError()
 componentDidCatch()
-
 常用的生命周期方法：
 render()
 render()方法是类组件中唯一需要的方法。
@@ -495,7 +456,6 @@ React组件的构造函数在它被挂载之前被调用。在实现React的构�
 避免在构造函数中引入任何”effect”或订阅。对于这些用例，请使用componentDidMount()。
 避免复制props中的值进入状态!这是一个常见的错误: 问题是它既没有必要(你可以用this.props.xxx直接代替)，并产生bug(对props的更新不会反映在状态中)。只有在你有意忽略props更新时才使用这个模式，然后在必要时更改组件的键来强制“重置”组件的内部状态。
 
-
 componentDidMount()
 组件被挂载(插入到树中)后立即调用componentDidMount()。需要DOM节点的初始化应该在这里进行。如果您需要从远程端点加载数据，这是一个实例化网络请求的好地方。
 这个方法是建立任何订阅的好地方。如果您这样做了，不要忘记在componentWillUnmount()中取消订阅。
@@ -511,8 +471,6 @@ componentDidUpdate(prevProps, prevState, snapshot)
 componentWillUnmount()
 componentWillUnmount()会在组件被卸载和销毁之前立即调用。在此方法中执行必要的清理，例如使计时器失效、取消网络请求或清理在componentDidMount()中创建的订阅。
 你不应该在componentWillUnmount()中调用setState()，因为组件永远不会被重新渲染。组件实例一旦被卸载，就再也不会被挂载了。
-
-
 很少使用的生命周期方法：大多数组件可能不需要它们。
 shouldComponentUpdate(nextProps, nextState)
 使用shouldComponentUpdate()让React知道组件的输出是否不受当前状态或Props的变化影响。默认行为是在每次状态更改时重新呈现，在绝大多数情况下，您应该依赖默认行为。
@@ -536,7 +494,6 @@ getSnapshotBeforeUpdate(prevProps, prevState)
 getSnapshotBeforeUpdate()在最近渲染的输出提交给DOM之前被调用。它使你的组件能够在它可能被更改之前从DOM捕获一些信息(例如滚动位置)。这个生命周期返回的任何值都将作为参数传递给componentDidUpdate()。
 这个用例并不常见，但它可能出现在用户界面中，比如需要以一种特殊的方式处理滚动位置的聊天线程。
 应该返回一个快照值(snapshot)或null。有时读取getSnapshotBeforeUpdate中的scrollHeight属性是很重要的，因为在“渲染”阶段生命周期(像render)和“提交”阶段生命周期(像getSnapshotBeforeUpdate和componentDidUpdate)之间可能存在延迟。
-
 Error boundaries(错误边界)
 错误边界是React组件，它在子组件树的任何地方捕捉JavaScript错误，记录这些错误，并显示一个后备UI，而不是崩溃的组件树。错误边界捕获在rendering过程中、生命周期方法中以及在它下面的整个树的构造函数中出现的错误。
 如果类组件定义了生命周期方法static getDerivedStateFromError()或componentDidCatch()中的一个(或两个)，它就会成为错误边界。从这些生命周期中更新状态使您可以在下面的树中捕获未处理的JavaScript错误，并显示退阶UI。
@@ -556,8 +513,7 @@ React的生产版本和开发版本在componentDidCatch()处理错误的方式�
 在开发时，错误会冒泡到window，这意味着window.onerror或window.addEventListener('error'， callback)将拦截componentDidCatch()捕获的错误。
 相反，在生产环境中，错误不会冒出来，这意味着任何祖先错误处理程序将只接收componentDidCatch()未显式捕获的错误。
 在出现错误的情况下，您可以通过调用setState来使用componentDidCatch()渲染退阶UI，但这将在未来的版本中弃用。使用静态的getDerivedStateFromError()来处理回退渲染。
-
-
+ 
 Hooks
 React 16.8 新增hook让您不用编写类就可以使用state和其他React特性。
 import React, { useState } from 'react';
@@ -579,14 +535,11 @@ function Example() {
 hooks是完全可选的。您可以在几个组件中尝试挂钩，而无需重写任何现有代码。或者不使用它。
 hooks不包含任何破坏更改，100%的向后兼容。
 hooks不能取代你对React概念的认识。相反，它为React概念(props、状态、上下文、引用和生命周期)提供了更直接的API。hook还提供了一种新的强大的方式来组合它们。
-
-
 什么是Hooks？ 
 Hooks是一种特殊的函数，它可以让你从函数组件“钩入”React状态和生命周期特性。例如，useState是一个Hooks，它允许您向功能组件添加状态。Hooks不能在类内部工作。但是您可以使用它们来代替编写类。
 
 我什么时候用Hooks?如果您编写了一个函数组件，并且意识到需要向其添加一些状态，那么以前您必须将其转换为一个类。现在您可以在现有的函数组件中使用一个Hooks。
 React提供了一些内置的Hooks，比如useState。您还可以创建自己的Hooks来重用不同组件之间的有状态行为。
-
 为什么会出现Hooks？
 1. 很难在组件之间重用有状态逻辑：React没有提供将可重用行为添加到组件的方法
 可以通过render props 和HOC尝试解决这个问题，但这要求重构代码。你可能会发现组件的“包装地狱”，由提供者providers、使用者,consumers、高阶组件HOC、渲染propsrender props和其他抽象层包围。
@@ -597,8 +550,6 @@ React提供了一些内置的Hooks，比如useState。您还可以创建自己�
 3. 类让人和机器困惑：除了使代码重用和代码组织更加困难之外，我们还发现类是学习React的一大障碍。
 您必须了解this在JavaScript中是如何工作的，这与在大多数语言中是非常不同的。人们可以很好地理解props、状态和自顶向下的数据流，但仍然很难理解类。类不能很好地缩小，它们使得热重新加载不稳定且不可靠。
 为了解决这些问题，Hooks允许你在不使用类的情况下使用更多React的特性。从概念上讲，React组件一直更接近于函数。Hooks拥抱了函数，但没有牺牲React的实用精神。Hooks提供了对命令式出口的访问，并且不需要您学习复杂的函数式或响应式编程技术。
-
-
 State Hook
 React提供的一个名为useState的Hook。我们在函数组件中调用它添加一些状态。
 import React, { useState } from 'react';
@@ -651,9 +602,6 @@ vs
 <button onClick={() => setCount(count + 1)}>
   Click me
 </button>
-
-
-
 Effect Hook
 您可能已经执行过数据获取、订阅或从React组件手动更改DOM。我们称这些操作为““effect””(或简称为“效果”)，因为它们会影响其他组件，在呈现过程中不能执行。
 效果挂钩useEffect添加了从函数组件执行”effect”的能力。它的作用与React类中的componentDidMount、componentDidUpdate和componentWillUnmount相同，但被统一到一个API中。
@@ -766,7 +714,6 @@ class Example extends React.Component {
   }
 }
 
-
 import React, { useState, useEffect } from 'react';
 
 function Example() {
@@ -851,16 +798,9 @@ useEffect(() => {
 如果您想运行一个效果并只清除一次(在挂载和卸载时)，可以传递一个空数组([])作为第二个参数。这告诉React你的效果不依赖于任何props或状态的值，所以它永远不需要重新运行。
 
 我们也开始看到钩子如何解决动机中列出的问题。我们已经看到了效果清理如何避免componentDidUpdate和componentWillUnmount中的重复，使相关代码更加紧密，并帮助我们避免bug。我们还看到了如何根据效果的目的来区分效果，这是我们在类中根本做不到的。
-
-
-
 Hooks是JavaScript函数，但是它们附加了两个规则：
 不要在循环、条件或嵌套函数内部调用钩子。相反，总是在React函数的顶层使用钩子。如果想要有条件地运行一个effect，可以将该条件放在钩子中。
 不要从常规JavaScript函数中调用Hooks。相反，总是在React函数组件中调用钩子。或从自定义钩子调用钩子。
-
-
-
-
 自定义Hooks
 有时，我们希望在组件之间重用一些有状态逻辑。传统上，这个问题有两种流行的解决方案:HOC件和render props。自定义Hooks允许您这样做，但不需要向树中添加更多组件。
 前面，我们介绍了一个FriendStatus组件，它调用useState和useEffect钩子来订阅朋友的在线状态。假设我们还想在另一个组件中重用这个订阅逻辑。我们可以将这个逻辑提取到一个名为useFriendStatus的自定义钩子中:

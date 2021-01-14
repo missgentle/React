@@ -1,18 +1,7 @@
-为什么不可变性在 React 中非常重要
-一般来说，有两种改变数据的方式。第一种方式是直接修改变量的值，第二种方式是使用新的一份数据替换旧数据。两者结果是一样的，但后者有以下几点好处：
-
-不可变性使得复杂的特性更容易实现。不直接在数据上修改可以让我们保存每次修改前的数据副本，从而追溯并复用历史记录，实现撤销和恢复。
-
-不可变性使得跟踪数据变化更容易。如果发现对象变成了一个新对象，那么我们就知道对象发生了改变。而不需要将整个对象树遍历一次。
-
-不可变性最主要的优势在于它可以帮助我们在 React 中创建 pure components。我们可以由此确定组件重新渲染的时机。
-
-
+React理论基础
 
 Chrome-React调试插件https://www.cnblogs.com/shenwh/p/12067029.html
 Sublime-React格式化 https://blog.csdn.net/HuangLin_Developer/article/details/89394949
-
-
 React 是什么？
 React 是一个声明式，高效且灵活的用于构建用户界面的 JavaScript 库。使用 React 可以将一些简短、独立的代码片段组合成复杂的 UI 界面，这些代码片段被称作“组件”。
 当数据发生改变时，React 会高效地更新并重新渲染我们的组件。
@@ -160,53 +149,6 @@ this.setState((state, props) => ({
 React的单向数据流(也称为单向绑定)使一切都保持模块化和快速。
 
 
-生命周期方法
-在具有多个组件的应用程序中，在组件被破坏时释放它们占用的资源是非常重要的。
-我们可以生命周期方法，以便在组件挂载和卸载时运行一些代码
-componentDidMount()方法在组件输出呈现给DOM之后运行。这里是设置计时器的好地方:
-我们将在componentWillUnmount()生命周期方法中销毁计时器:
-它将使用this.setState()来调度组件本地状态的更新
-class Clock extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {date: new Date()};
-  }
-
-  componentDidMount() {
-    this.timerID = setInterval(
-      () => this.tick(),
-      1000
-    );
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.timerID);
-  }
-
-  tick() {
-    this.setState({
-      date: new Date()
-    });
-  }
-
-  render() {
-    return (
-      <div>
-        <h1>Hello, world!</h1>
-        <h2>It is {this.state.date.toLocaleTimeString()}.</h2>
-      </div>
-    );
-  }
-}
-
-ReactDOM.render(
-  <Clock />,
-  document.getElementById('root')
-);
-
-return的内容用()包裹，防止JavaScript 解析的时在 return 的后面自动插入一个分号从而破坏代码结构。
-
-
 事件绑定
 使用React元素处理事件与处理DOM元素上的事件非常相似。这里有一些语法差异:
 1React事件使用驼峰大小写命名，而不是小写。
@@ -240,7 +182,8 @@ ReactDOM.render(
   <Toggle />,
   document.getElementById('root')
 );
-在JavaScript中，类方法默认情况下是不绑定的。如果你忘了绑这个。handleClick并将其传递给onClick，当函数被实际调用时，这将是未定义的。
+return的内容用()包裹，防止JavaScript 解析的时在 return 的后面自动插入一个分号从而破坏代码结构。
+在JavaScript中，类方法默认情况下是不绑定的。如果你忘了绑this.handleClick并将其传递给onClick，当函数被实际调用时，这将是未定义的。
 这不是特定反应行为;这是JavaScript中函数工作方式的一部分。通常，如果你引用的方法后面没有()，比如onClick={this.handleClick}，你应该绑定那个方法。
 如果调用bind让您感到烦恼，有两种方法可以解决这个问题。如果你正在使用实验性的公共类字段语法，你可以使用类字段来正确地绑定回调函数
 如果你没有使用类字段语法，你可以在回调函数中使用箭头函数。这种语法的问题是，每次呈现时都会创建一个不同的回调函数。在大多数情况下，这是可以的。然而，如果这个回调被作为一个props传递给较低的组件，这些组件可能会做额外的重新渲染。我们通常建议在构造函数中绑定或使用类字段语法，以避免这类性能问题。
@@ -386,6 +329,15 @@ React思维
 步骤5:添加反向数据流
 层次结构深处的表单组件更新更高层次的组件的state。 
 
+为什么不可变性在 React 中非常重要
+一般来说，有两种改变数据的方式。第一种方式是直接修改变量的值，第二种方式是使用新的一份数据替换旧数据。两者结果是一样的，但后者有以下几点好处：
+
+不可变性使得复杂的特性更容易实现。不直接在数据上修改可以让我们保存每次修改前的数据副本，从而追溯并复用历史记录，实现撤销和恢复。
+
+不可变性使得跟踪数据变化更容易。如果发现对象变成了一个新对象，那么我们就知道对象发生了改变。而不需要将整个对象树遍历一次。
+
+不可变性最主要的优势在于它可以帮助我们在 React 中创建 pure components。我们可以由此确定组件重新渲染的时机。
+
 
 懒加载lazy
 React.lazy函数允许将动态导入呈现为常规组件。
@@ -464,12 +416,6 @@ const MyComponent = () => (
 try / catch很棒，但它只适用于命令式代码: 然而，React组件是声明式的，并指定应该呈现的内容:
 
 
-生命周期方法
-shouldComponentUpdate 在重新呈现过程开始之前被触发。
-即使React只更新更改的DOM节点，重新呈现仍然需要一些时间。在许多情况下，这不是问题，但是如果减速很明显，您可以通过覆盖生命周期函数shouldComponentUpdate来加速这一切，该函数在重新呈现过程开始之前被触发。这个函数的默认实现返回true，离开React来执行更新
-如果您知道在某些情况下您的组件不需要更新，那么您可以从shouldComponentUpdate返回false，从而跳过整个呈现过程，包括在这个组件和下面的组件上调用render()。
-在大多数情况下，不需要手工编写shouldComponentUpdate()，您可以从React.PureComponent继承。这相当于通过对当前和以前的props和状态进行浅层比较来实现shouldComponentUpdate()。
-
 Forwarding Refs
 一种通过组件自动将Ref传递给其子组件的技术。对于应用程序中的大多数组件来说，这通常是不必要的。但是，它对某些类型的组件很有用，特别是在可重用组件库中。
 Refs提供了一种访问DOM节点或对render方法中创建的元素做出反应的方法。
@@ -481,9 +427,11 @@ Refs提供了一种访问DOM节点或对render方法中创建的元素做出反�
 	与第三方DOM库集成。
 
 
-Higher-Order Components  --- 一种组合模式 提取出可重用行为减少代码量 一个方法接收组件参数返回新的带有可重用行为的组件 注意静态方法要复制 refs无法重用 如果向HOC添加ref, ref将引用最外层的容器组件，而不是被包装的组件。幸运的是，我们可以使用React.forwardRef API显式地将refs转发到内部组件。
+Higher-Order Components (HOC)
+一种组合模式 提取出可重用行为减少代码量 一个方法接收组件参数返回新的带有可重用行为的组件 注意静态方法要复制 refs无法重用 如果向HOC添加ref, ref将引用最外层的容器组件，而不是被包装的组件。幸运的是，我们可以使用React.forwardRef API显式地将refs转发到内部组件。
 
-Render Props  ---  一个提供方法的prop 提高渲染效率 行为具有相关性 可以使用带有Render Prop的常规组件来实现大多数的HOC。 render可以换个名字
+Render Props 
+一个提供方法的prop 提高渲染效率 行为具有相关性 可以使用带有Render Prop的常规组件来实现大多数的HOC。 render可以换个名字
 <Mouse render={mouse => (
   <p>The mouse position is {mouse.x}, {mouse.y}</p>
 )}/>
@@ -493,6 +441,121 @@ this.props.render(this.state) 并不是在组件中修改了props，而是将参
 注意在React.PureComponent中使用Render Props要小心
 使用Render Prop会抵消使用React.PureComponent带来的优势如果在render()中创建方法。这是因为对于新的prop，浅prop比较总是返回false，并且在这种情况下，每次渲染都会为Render Prop生成一个新的值。  这时可以将render prop定义为一个实例方法 提出到render()之外
 
+生命周期
+https://projects.wojtekmaj.pl/react-lifecycle-methods-diagram/
+React允许您将组件定义为类或函数。定义为类的组件目前提供更多的特性，在本页中将详细描述。要定义React组件类，你需要扩展React. component
+我们强烈建议不要创建自己的基组件类。在React组件中，代码重用主要是通过组合而不是继承来实现的。
+每个组件都有几个“生命周期方法”，您可以覆盖这些方法，以便在流程中的特定时间运行代码。
+
+Mounting
+当组件的实例被创建并插入到DOM中时，这些方法会按照以下顺序被调用:
+constructor()
+static getDerivedStateFromProps()
+render()
+componentDidMount()
+
+Updating
+props或状态的更改可以导致更新。当组件被重新渲染时，这些方法被按照以下顺序调用:
+static getDerivedStateFromProps()
+shouldComponentUpdate()
+render()
+getSnapshotBeforeUpdate()
+componentDidUpdate()
+
+Unmounting
+当组件被从DOM中移除时，这个方法会被调用:
+componentWillUnmount()
+
+Error Handling
+当呈现过程中、生命周期方法中或任何子组件的构造函数中出现错误时，将调用这些方法。
+static getDerivedStateFromError()
+componentDidCatch()
+
+常用的生命周期方法：
+render()
+render()方法是类组件中唯一需要的方法。
+当被调用时，它应该检查这个。props和。状态并返回以下类型之一:
+React元素。通常通过JSX创建。
+数组和碎片。让你从渲染中返回多个元素。
+门户网站(Portals)。让您将子节点呈现到不同的DOM子树中。有关更多细节，请参阅门户上的文档。
+字符串和数字。它们在DOM中呈现为文本节点。
+布尔值或null。什么都不渲染。(主要存在于条件渲染)
+
+render()函数应该是纯的，这意味着它不修改组件状态，每次调用它都会返回相同的结果，并且它不直接与浏览器交互。如果需要与浏览器交互，在componentDidMount()或其他生命周期方法中执行操作。
+如果shouldComponentUpdate()返回false，则不会调用render()。
+
+constructor (props)
+如果你不初始化状态，也不绑定方法，你就不需要为React组件实现构造函数。
+React组件的构造函数在它被挂载之前被调用。在实现React的构造函数时。组件子类，您应该在任何其他语句之前调用super(props)。否则,this.props将在构造函数中未定义，这可能会导致bug。
+通常，在React中构造函数只用于两个目的:
+通过将一个对象赋值给this.state来初始化本地状态。
+将事件处理程序方法绑定到实例。
+
+不应该在构造函数()中调用setState()。构造函数是唯一应该直接赋值this.state的地方。在所有其他方法中，您需要使用this.setState()代替。
+避免在构造函数中引入任何”effect”或订阅。对于这些用例，请使用componentDidMount()。
+避免复制props中的值进入状态!这是一个常见的错误: 问题是它既没有必要(你可以用this.props.xxx直接代替)，并产生bug(对props的更新不会反映在状态中)。只有在你有意忽略props更新时才使用这个模式，然后在必要时更改组件的键来强制“重置”组件的内部状态。
+
+
+componentDidMount()
+组件被挂载(插入到树中)后立即调用componentDidMount()。需要DOM节点的初始化应该在这里进行。如果您需要从远程端点加载数据，这是一个实例化网络请求的好地方。
+这个方法是建立任何订阅的好地方。如果您这样做了，不要忘记在componentWillUnmount()中取消订阅。
+你可以在componentDidMount()中立即调用setState()。它将触发一个额外的rendering，但它将发生在浏览器更新屏幕之前。这保证了即使render()在这种情况下被调用两次，用户也不会看到中间状态。请谨慎使用此模式，因为它经常会导致性能问题。在大多数情况下，您应该能够在构造函数()中指定初始状态。然而，当您需要在渲染依赖于如模态和工具提示的大小或位置的东西之前测量DOM节点时，它可能是必要的。
+
+componentDidUpdate(prevProps, prevState, snapshot)
+在更新发生后立即调用。初始呈现时不调用此方法。
+当组件被更新时，可以利用这个机会对DOM进行操作。这也是进行网络请求的好地方，只要您将当前的Props与以前的Props进行比较(如果Props没有更改，则可能不需要网络请求)。
+你可以在componentDidUpdate()中立即调用setState()，但请注意，它必须被包装在一个条件中，否则会导致无限循环。它还会导致额外的重新呈现，虽然对用户不可见，但会影响组件的性能。如果你试图“镜像”一些状态到Props，考虑直接使用Props。
+如果你的组件实现了getSnapshotBeforeUpdate()生命周期(这是很少见的)，它返回的值将作为第三个“快照”参数传递给componentDidUpdate()。否则这个参数将是未定义的。
+如果shouldComponentUpdate()返回false，将不会调用componentDidUpdate()。
+
+componentWillUnmount()
+componentWillUnmount()会在组件被卸载和销毁之前立即调用。在此方法中执行必要的清理，例如使计时器失效、取消网络请求或清理在componentDidMount()中创建的订阅。
+你不应该在componentWillUnmount()中调用setState()，因为组件永远不会被重新渲染。组件实例一旦被卸载，就再也不会被挂载了。
+
+
+很少使用的生命周期方法：大多数组件可能不需要它们。
+shouldComponentUpdate(nextProps, nextState)
+使用shouldComponentUpdate()让React知道组件的输出是否不受当前状态或Props的变化影响。默认行为是在每次状态更改时重新呈现，在绝大多数情况下，您应该依赖默认行为。
+当接收到新的Props或状态时，会在rendering之前调用shouldComponentUpdate()。默认值为true。初始渲染或使用forceUpdate()时不调用此方法。
+此方法仅作为性能优化而存在。不要依赖它来“阻止”渲染，因为这可能导致bug。考虑使用内置的PureComponent，而不是手工编写shouldComponentUpdate()。PureComponent执行Props和状态的简单比较，减少了您跳过必要更新。
+如果你确信你想手写，你可以比较一下this.props与nextProps，this.state与nextState，返回false告诉React可以跳过更新。注意，返回false并不会阻止子组件在状态改变时重新呈现。
+我们不建议做深度的相等性检查或在shouldComponentUpdate()中使用JSON.stringify()。这是非常低效的，并将损害性能。
+目前，如果shouldComponentUpdate()返回false，则不会调用UNSAFE_componentWillUpdate()(一个遗留的生命周期方法)、render()和componentDidUpdate()。将来React可能会把shouldComponentUpdate()当作一个提示而不是一个严格的指令，并且返回false仍然可能导致组件的重新呈现。
+
+static getDerivedStateFromProps(props, state)
+在render()之前被调用，在初始挂载和后续更新时都是如此。它应该返回一个对象来更新状态，或者返回null来不更新任何内容。
+这种方法适用于状态依赖于props随时间变化的少数情况。
+派生状态会导致冗长的代码，并使您的组件难以思考。确保你熟悉简单的替代方案:
+如果你需要执行一个”effect”(例如，数据获取或动画)来响应props的变化，使用componentDidUpdate生命周期代替。
+如果你想在props发生变化时重新计算一些数据，可以使用记忆辅助工具。
+如果你想在props改变时“重置”某些状态，可以考虑使用带key的完全控制或完全不受控制的组件。
+此方法不能访问组件实例。如果想，可以在getDerivedStateFromProps()和其他类方法之间重用一些代码：在类定义之外提取组件props和状态的纯函数。
+注意这个方法在每次render时都会被触发。这与UNSAFE_componentWillReceiveProps(一个遗留的生命周期方法)相反，UNSAFE_componentWillReceiveProps只在父组件导致重渲染时触发，而不会因为本地setState触发。
+
+getSnapshotBeforeUpdate(prevProps, prevState)
+getSnapshotBeforeUpdate()在最近渲染的输出提交给DOM之前被调用。它使你的组件能够在它可能被更改之前从DOM捕获一些信息(例如滚动位置)。这个生命周期返回的任何值都将作为参数传递给componentDidUpdate()。
+这个用例并不常见，但它可能出现在用户界面中，比如需要以一种特殊的方式处理滚动位置的聊天线程。
+应该返回一个快照值(snapshot)或null。有时读取getSnapshotBeforeUpdate中的scrollHeight属性是很重要的，因为在“渲染”阶段生命周期(像render)和“提交”阶段生命周期(像getSnapshotBeforeUpdate和componentDidUpdate)之间可能存在延迟。
+
+Error boundaries(错误边界)
+错误边界是React组件，它在子组件树的任何地方捕捉JavaScript错误，记录这些错误，并显示一个后备UI，而不是崩溃的组件树。错误边界捕获在rendering过程中、生命周期方法中以及在它下面的整个树的构造函数中出现的错误。
+如果类组件定义了生命周期方法static getDerivedStateFromError()或componentDidCatch()中的一个(或两个)，它就会成为错误边界。从这些生命周期中更新状态使您可以在下面的树中捕获未处理的JavaScript错误，并显示退阶UI。
+仅在从意外异常中恢复时使用错误边界;不要试图将它们用于控制流。
+错误边界只捕获树中它们下面的组件中的错误。错误边界不能捕获自身的错误。
+
+static getDerivedStateFromError(error)
+这个生命周期是在后代组件抛出错误后调用的。它接收作为参数抛出的错误，并返回值更新状态。
+getDerivedStateFromError()在“渲染”阶段被调用，因此”effect”未生效的。对于这些用例，请使用componentDidCatch()。
+
+componentDidCatch(error, info)
+这个生命周期是在后代组件抛出错误后调用的。它接收两个参数:
+error—抛出的错误。
+info —一个带有componentStack键的对象，其中包含关于哪个组件抛出错误的信息。
+componentDidCatch()在“提交”阶段被调用，因此”effect”是生效的。它应该用于记录错误。
+React的生产版本和开发版本在componentDidCatch()处理错误的方式上略有不同。
+在开发时，错误会冒泡到window，这意味着window.onerror或window.addEventListener('error'， callback)将拦截componentDidCatch()捕获的错误。
+相反，在生产环境中，错误不会冒出来，这意味着任何祖先错误处理程序将只接收componentDidCatch()未显式捕获的错误。
+在出现错误的情况下，您可以通过调用setState来使用componentDidCatch()渲染退阶UI，但这将在未来的版本中弃用。使用静态的getDerivedStateFromError()来处理回退渲染。
 
 
 Hooks
@@ -515,7 +578,7 @@ function Example() {
 
 hooks是完全可选的。您可以在几个组件中尝试挂钩，而无需重写任何现有代码。或者不使用它。
 hooks不包含任何破坏更改，100%的向后兼容。
-hooks不能取代你对React概念的认识。相反，它为React概念(道具、状态、上下文、引用和生命周期)提供了更直接的API。hook还提供了一种新的强大的方式来组合它们。
+hooks不能取代你对React概念的认识。相反，它为React概念(props、状态、上下文、引用和生命周期)提供了更直接的API。hook还提供了一种新的强大的方式来组合它们。
 
 
 什么是Hooks？ 
@@ -524,11 +587,11 @@ Hooks是一种特殊的函数，它可以让你从函数组件“钩入”React�
 我什么时候用Hooks?如果您编写了一个函数组件，并且意识到需要向其添加一些状态，那么以前您必须将其转换为一个类。现在您可以在现有的函数组件中使用一个Hooks。
 React提供了一些内置的Hooks，比如useState。您还可以创建自己的Hooks来重用不同组件之间的有状态行为。
 
-为什么会出现Hookshook？
+为什么会出现Hooks？
 1. 很难在组件之间重用有状态逻辑：React没有提供将可重用行为添加到组件的方法
 可以通过render props 和HOC尝试解决这个问题，但这要求重构代码。你可能会发现组件的“包装地狱”，由提供者providers、使用者,consumers、高阶组件HOC、渲染propsrender props和其他抽象层包围。
 所以React需要一个更好的原语来共享有状态逻辑。通过使用Hooks，可以从组件中提取有状态逻辑，以便能够独立地测试和重用它。
-2. 复杂的组件变得难以理解：我们经常不得不维护一些组件，这些组件一开始很简单，但后来发展成一团混乱的有状态逻辑和副作用。每个生命周期方法通常都包含一些不相关的逻辑。这很容易引入错误和不一致。
+2. 复杂的组件变得难以理解：我们经常不得不维护一些组件，这些组件一开始很简单，但后来发展成一团混乱的有状态逻辑和”effect”。每个生命周期方法通常都包含一些不相关的逻辑。这很容易引入错误和不一致。
 在许多情况下，不可能将这些组件分解成更小的组件，因为到处都是有状态逻辑。测试它们也很困难。这也是许多人喜欢将React与单独的状态管理库结合使用的原因之一。然而，这通常会引入太多的抽象，要求您在不同的文件之间跳转，并使重用组件变得更加困难。
 为了解决这个问题，Hooks允许您根据相关的部分(如设置订阅或获取数据)将一个组件拆分为更小的函数，而不是根据生命周期方法强制拆分。您还可以选择使用reducer来管理组件的本地状态，以使其更可预测。
 3. 类让人和机器困惑：除了使代码重用和代码组织更加困难之外，我们还发现类是学习React的一大障碍。
@@ -592,8 +655,8 @@ vs
 
 
 Effect Hook
-您可能已经执行过数据获取、订阅或从React组件手动更改DOM。我们称这些操作为“副作用”(或简称为“效果”)，因为它们会影响其他组件，在呈现过程中不能执行。
-效果挂钩useEffect添加了从函数组件执行副作用的能力。它的作用与React类中的componentDidMount、componentDidUpdate和componentWillUnmount相同，但被统一到一个API中。
+您可能已经执行过数据获取、订阅或从React组件手动更改DOM。我们称这些操作为““effect””(或简称为“效果”)，因为它们会影响其他组件，在呈现过程中不能执行。
+效果挂钩useEffect添加了从函数组件执行”effect”的能力。它的作用与React类中的componentDidMount、componentDidUpdate和componentWillUnmount相同，但被统一到一个API中。
 import React, { useState, useEffect } from 'react';
 
 function Example() {
@@ -614,7 +677,7 @@ function Example() {
     </div>
   );
 }
-当您调用useEffect时，您是在告诉React在刷新DOM更改后运行“effect”函数。效果是在组件内部声明的，因此它们可以访问组件的道具和状态。默认情况下，React会在每次渲染后运行效果——包括第一次渲染。
+当您调用useEffect时，您是在告诉React在刷新DOM更改后运行“effect”函数。效果是在组件内部声明的，因此它们可以访问组件的props和状态。默认情况下，React会在每次渲染后运行效果——包括第一次渲染。
 效果还可以通过返回一个函数来指定如何在它们之后进行“清理”。例如，这个组件使用一种效果来订阅一个朋友的在线状态，然后通过取消订阅来清除:
 
 import React, { useState, useEffect } from 'react';
@@ -661,21 +724,21 @@ function FriendStatusWithCounter(props) {
     setIsOnline(status.isOnline);
   }
   // ...
-Effect Hook允许您根据组件中相关的部分(比如添加和删除订阅)来组织副作用，而不是根据生命周期方法强制进行分割。
+Effect Hook允许您根据组件中相关的部分(比如添加和删除订阅)来组织”effect”，而不是根据生命周期方法强制进行分割。
 
-Effect Hook让你在函数组件中执行副作用(或 “效果”)，在React组件中获取数据、设置订阅和手动更改DOM都是副作用的例子。调用useEffect时，您是在告诉React在刷新DOM的更改后运行“effect”函数。默认情况下，React会在每次渲染之后运行“effect”——包括第一次渲染。
-Hooks允许您根据相关的部分(如添加和删除订阅)来组织组件中的副作用，而不是强制基于生命周期方法进行拆分，它允许您在组件中执行副作用，并且类似于类中的生命周期方法
+Effect Hook让你在函数组件中执行”effect”(或 “效果”)，在React组件中获取数据、设置订阅和手动更改DOM都是”effect”的例子。调用useEffect时，您是在告诉React在刷新DOM的更改后运行“effect”函数。默认情况下，React会在每次渲染之后运行“effect”——包括第一次渲染。
+Hooks允许您根据相关的部分(如添加和删除订阅)来组织组件中的”effect”，而不是强制基于生命周期方法进行拆分，它允许您在组件中执行”effect”，并且类似于类中的生命周期方法
 如果您熟悉React类生命周期方法，您可以将useEffectHooks看作是componentDidMount、componentDidUpdate和componentWillUnmount的组合。
-React组件有两种常见的副作用:不需要清理的副作用和需要清理的副作用。
+React组件有两种常见的”effect”:不需要清理的”effect”和需要清理的”effect”。
 有时，我们希望在React更新了DOM之后运行一些额外的代码。网络请求、手动DOM突变和日志记录是不需要清理的常见效果示例。
-在React类组件中，render方法本身不应该造成副作用。因为这里还为时过早——我们通常希望在React更新了DOM之后再执行效果。这就是为什么在React类中，我们将副作用放到componentDidMount和componentDidUpdate中。请注意，我们必须在类中的这两个生命周期方法之间复制代码。忘记正确处理componentDidUpdate是React应用程序常见的bug来源。可能导致内存泄漏或崩溃。
-这是因为在许多情况下，我们希望执行相同的副作用，而不管组件是刚刚挂载还是之后已经完成更新。从概念上讲，我们希望它在每次呈现之后发生——但是React类组件没有这样的方法。
-Effect Hook是做什么的?通过使用这个Hooks，你告诉React你的组件需要在渲染之后做一些事情。React将记住您传递的函数(我们将把它称为“效果”或副作用)，并在执行DOM更新之后调用它。useEffect在默认情况下处理它们。在应用下一个效果之前，它会清除之前的效果。
+在React类组件中，render方法本身不应该造成”effect”。因为这里还为时过早——我们通常希望在React更新了DOM之后再执行效果。这就是为什么在React类中，我们将”effect”放到componentDidMount和componentDidUpdate中。请注意，我们必须在类中的这两个生命周期方法之间复制代码。忘记正确处理componentDidUpdate是React应用程序常见的bug来源。可能导致内存泄漏或崩溃。
+这是因为在许多情况下，我们希望执行相同的”effect”，而不管组件是刚刚挂载还是之后已经完成更新。从概念上讲，我们希望它在每次呈现之后发生——但是React类组件没有这样的方法。
+Effect Hook是做什么的?通过使用这个Hooks，你告诉React你的组件需要在渲染之后做一些事情。React将记住您传递的函数(我们将把它称为“效果”或”effect”)，并在执行DOM更新之后调用它。useEffect在默认情况下处理它们。在应用下一个效果之前，它会清除之前的效果。
 为什么在组件内部调用useEffect ?将useEffect放在组件中，我们可以直接从该效果访问状态变量(或任何prop)。我们不需要一个特殊的API来读取它——它已经在函数作用域中了。Hooks包含了JavaScript闭包，并避免引入JavaScript已经提供解决方案的React-specific APIs。
 是否每次渲染后都会运行useEffect ?是的!默认情况下，它在第一次渲染和每次更新之后运行。这种行为在默认情况下确保了一致性，并防止了由于缺少更新逻辑而在类组件中常见的bug。
 与componentDidMount或componentDidUpdate不同，使用useEffect的效果不会阻止浏览器更新屏幕。这让你的应用程序感觉响应更快。大多数效果不需要同步发生。在不常见的情况下(比如测量布局)，有一个单独的useLayoutEffectHooks，其API与useEffect相同。
 
-对比类与Hooks不需要清理的副作用。
+对比类与Hooks不需要清理的”effect”。
 class Example extends React.Component {
   constructor(props) {
     super(props);
@@ -723,7 +786,7 @@ function Example() {
   );
 }
 
-对比类与Hooks需要清理的副作用。
+对比类与Hooks需要清理的”effect”。
 
 在React类中，你通常会在componentDidMount中设置订阅，然后在componentWillUnmount中清除订阅。
 
@@ -785,7 +848,7 @@ useEffect(() => {
 }, [props.friend.id]); // Only re-subscribe if props.friend.id changes
 将来，第二个参数可能会通过构建时转换自动添加。
 
-如果您想运行一个效果并只清除一次(在挂载和卸载时)，可以传递一个空数组([])作为第二个参数。这告诉React你的效果不依赖于任何道具或状态的值，所以它永远不需要重新运行。
+如果您想运行一个效果并只清除一次(在挂载和卸载时)，可以传递一个空数组([])作为第二个参数。这告诉React你的效果不依赖于任何props或状态的值，所以它永远不需要重新运行。
 
 我们也开始看到钩子如何解决动机中列出的问题。我们已经看到了效果清理如何避免componentDidUpdate和componentWillUnmount中的重复，使相关代码更加紧密，并帮助我们避免bug。我们还看到了如何根据效果的目的来区分效果，这是我们在类中根本做不到的。
 
@@ -847,4 +910,3 @@ useReducer可以通过一个reducer管理复杂组件的本地状态
 当我们想要在两个JavaScript函数之间共享逻辑时，我们将其提取到第三个函数中。组件和钩子都是函数，所以这也适用于它们!
 自定义钩子是一个JavaScript函数，它的名字以“use”开头，可以调用其他钩子。就像在组件中一样，确保只在自定义钩子的顶层调用其他钩子。
 两个组件使用相同的钩子共享状态吗?不。自定义钩子是一种重用有状态逻辑的机制，但每次使用自定义钩子时，它内部的所有状态和效果都是完全隔离的。
-
